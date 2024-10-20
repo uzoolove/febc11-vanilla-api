@@ -21,7 +21,7 @@ const doc = {
   },
   servers: [
     {
-      url: 'https://api.fesp.shop',
+      url: 'https://11.fesp.shop',
       description: 'production 테스트'
     },
     {
@@ -313,7 +313,7 @@ const doc = {
         "ok": 1,
         "duplicate": false
       },
-      
+
       accessTokenRes: {
         "ok": 1,
         "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjUsInR5cGUiOiJ1c2VyIiwiaWF0IjoxNzAwNTU1NjUzLCJleHAiOjE3MDA1NTYyNTMsImlzcyI6IkZFU1AwMSJ9.tBbQZLmwlg0y5juJ_TTkET1buZ4QFGf8RJ0G_IWIyns"
@@ -331,11 +331,11 @@ const doc = {
         ],
         "content": "<div class=\"product-detail\"><p>ZOZOFO 테이블 게임 축구 보드 사커 게임기 보드게임 2인경기 완구 가족모임 미니 월드컵 스포츠 어린이 크리스마스 선물 생일 선물 상세 설명</p></div>",
         "extra": {
-            "isNew": true,
-            "isBest": true,
-            "category": ["PC02", "PC0201"],
-            "sort": 7,
-            "depth": 2
+          "isNew": true,
+          "isBest": true,
+          "category": ["PC02", "PC0201"],
+          "sort": 7,
+          "depth": 2
         }
       },
 
@@ -1367,7 +1367,7 @@ const doc = {
         }
       },
 
-      
+
       userListRes: {
         "ok": 1,
         "item": [
@@ -1590,19 +1590,19 @@ const doc = {
           "type": "user",
           "image": "http://k.kakaocdn.net/dn/p4NUj/btsFiuTSVb6/Q4YkWkx4t1AFkFA3rtq6ZK/img_110x110.jpg",
           "kakao": {
-              "id": 1234567890,
-              "connected_at": "2024-04-13T15:52:13Z",
-              "kakao_account": {
-                  "profile_nickname_needs_agreement": false,
-                  "profile_image_needs_agreement": false,
-                  "profile": {
-                      "nickname": "GD",
-                      "thumbnail_image_url": "http://k.kakaocdn.net/dn/p4NUj/btsFiuTSVb6/Q4YkWkx4t1AFkFA3rtq6ZK/img_110x110.jpg",
-                      "profile_image_url": "http://k.kakaocdn.net/dn/p4NUj/btsFiuTSVb6/Q4YkWkx4t1AFkFA3rtq6ZK/img_640x640.jpg",
-                      "is_default_image": false,
-                      "is_default_nickname": false
-                  }
+            "id": 1234567890,
+            "connected_at": "2024-04-13T15:52:13Z",
+            "kakao_account": {
+              "profile_nickname_needs_agreement": false,
+              "profile_image_needs_agreement": false,
+              "profile": {
+                "nickname": "GD",
+                "thumbnail_image_url": "http://k.kakaocdn.net/dn/p4NUj/btsFiuTSVb6/Q4YkWkx4t1AFkFA3rtq6ZK/img_110x110.jpg",
+                "profile_image_url": "http://k.kakaocdn.net/dn/p4NUj/btsFiuTSVb6/Q4YkWkx4t1AFkFA3rtq6ZK/img_640x640.jpg",
+                "is_default_image": false,
+                "is_default_nickname": false
               }
+            }
           },
           "loginType": "kakao",
           "createdAt": "2023.11.21 16:25:54",
@@ -2321,7 +2321,7 @@ const doc = {
         }
       },
 
-      
+
 
       userInfoRes: {
         "ok": 1,
@@ -2721,9 +2721,9 @@ const doc = {
         }
       },
 
-      
 
-      
+
+
 
     }
   }
