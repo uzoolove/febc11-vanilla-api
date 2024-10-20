@@ -11,7 +11,7 @@ if (process.env.NODE_ENV) {
 
 export const db = {
   url: process.env.DB_URL,
-  clientIds: ['00-sample', '00-next-level', '01-TriFly', '02-genisisu', '03-Greeny', '04-Foomee', '05-ILB', '06-PickYourPotion', '07-myeonhakso', '08-highlightalk', '09-triots'],
+  clientIds: ['sample'],
 };
 
 export const jwt = {
@@ -32,7 +32,7 @@ export const jwt = {
       algorithm: 'HS256',
       expiresIn: '30d',
       // expiresIn: '30s',
-      issuer: 'FESP', 
+      issuer: 'FESP',
     },
   }
 };
@@ -51,4 +51,4 @@ export const cors = {
   ]
 };
 
-export default {db, jwt, cors};
+export default { db, jwt, cors };
