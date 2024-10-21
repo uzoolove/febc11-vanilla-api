@@ -3,13 +3,12 @@ import { MongoClient } from 'mongodb';
 async function getDB(clientId) {
   const url = process.env.DB_URL;
 
-  console.log(`DB 접속 시도: ${url}`, clientId);
+  console.log(`DB 접속 시도: ${url}/${clientId}`);
 
   try {
-    const client = new MongoClient(url);
+    const client = new MongoClient(`${url}/${clientId}`);
 
     await client.connect();
-    console.info(`DB 접속 성공: ${url}/${clientId}`);
     const db = client.db(clientId);
     db.user = db.collection('user');
     db.product = db.collection('product');
