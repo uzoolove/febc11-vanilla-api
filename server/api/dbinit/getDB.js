@@ -1,13 +1,13 @@
 import { MongoClient } from 'mongodb';
 
-async function getDB(clientId){
+async function getDB(clientId) {
   const url = process.env.DB_URL;
 
   console.log(`DB 접속 시도: ${url}`, clientId);
-  
-  try{
+
+  try {
     const client = new MongoClient(url);
-  
+
     await client.connect();
     console.info(`DB 접속 성공: ${url}/${clientId}`);
     const db = client.db(clientId);
@@ -15,24 +15,24 @@ async function getDB(clientId){
     db.product = db.collection('product');
     db.cart = db.collection('cart');
     db.order = db.collection('order');
-    db.reply = db.collection('reply');
+    db.review = db.collection('review');
     db.seq = db.collection('seq');
     db.code = db.collection('code');
     db.bookmark = db.collection('bookmark');
     db.config = db.collection('config');
     db.post = db.collection('post');
-  
+
     const nextSeq = async _id => {
       let result = await db.seq.findOneAndUpdate({ _id }, { $inc: { no: 1 } });
-      if(!result){
+      if (!result) {
         result = { _id, no: 1 };
-        await db.seq.insertOne({ _id, no: 2});
+        await db.seq.insertOne({ _id, no: 2 });
       }
       return result.no;
     }
 
     return { db, client, nextSeq };
-  }catch(err){
+  } catch (err) {
     console.error(err);
   }
 }

@@ -586,8 +586,8 @@ const doc = {
                 "image": "/files/sample-diver.jpg",
                 "quantity": 2,
                 "price": 34520,
-                "reply_id": 3,
-                "reply": {
+                "review_id": 3,
+                "review": {
                   "rating": 1,
                   "content": "하루만에 고장났어요.",
                   "extra": {
@@ -649,7 +649,7 @@ const doc = {
               "image": "/files/sample-bugatti.png",
               "quantity": 1,
               "price": 45000,
-              "reply_id": 1
+              "review_id": 1
             }
           ],
           "cost": {
@@ -690,7 +690,7 @@ const doc = {
               "image": "/files/sample-diver.jpg",
               "quantity": 1,
               "price": 17260,
-              "reply_id": 2
+              "review_id": 2
             }
           ],
           "cost": {
@@ -846,7 +846,7 @@ const doc = {
         }
       },
 
-      replyListRes: {
+      reviewListRes: {
         "ok": 1,
         "item": [
           {
@@ -872,7 +872,7 @@ const doc = {
         ]
       },
 
-      replyInfoRes: {
+      reviewInfoRes: {
         "ok": 1,
         "item": {
           "_id": 5,
@@ -898,7 +898,7 @@ const doc = {
         }
       },
 
-      sellerReplyListRes: {
+      sellerReviewListRes: {
         "ok": 1,
         "item": [
           {

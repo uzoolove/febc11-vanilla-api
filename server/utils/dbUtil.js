@@ -13,8 +13,8 @@ export const getClient = (clientId) => connections[clientId].client;
 
 logger.log(`DB 접속 시도: ${url}`);
 
-for(const clientId of DBConfig.clientIds){
-  try{
+for (const clientId of DBConfig.clientIds) {
+  try {
     const client = new MongoClient(url);
 
     await client.connect();
@@ -24,7 +24,7 @@ for(const clientId of DBConfig.clientIds){
     db.product = db.collection('product');
     db.cart = db.collection('cart');
     db.order = db.collection('order');
-    db.reply = db.collection('reply');
+    db.review = db.collection('review');
     db.seq = db.collection('seq');
     db.code = db.collection('code');
     db.bookmark = db.collection('bookmark');
@@ -34,9 +34,9 @@ for(const clientId of DBConfig.clientIds){
 
     db.nextSeq = async _id => {
       let result = await db.seq.findOneAndUpdate({ _id }, { $inc: { no: 1 } });
-      if(!result){
+      if (!result) {
         result = { _id, no: 1 };
-        await db.seq.insertOne({ _id, no: 2});
+        await db.seq.insertOne({ _id, no: 2 });
       }
       console.log('nextseq', result.no)
       return result.no;
@@ -49,7 +49,7 @@ for(const clientId of DBConfig.clientIds){
 
     await codeUtil.initCode(clientId, db);
     await codeUtil.initConfig(clientId, db);
-  }catch(err){
+  } catch (err) {
     logger.error(err);
   }
 }

@@ -13,7 +13,7 @@ router.post('/', jwtAuth.auth('user'), [
   body('product_id').isInt().withMessage('상품 id는 정수만 입력 가능합니다.'),
   body('rating').optional().isInt().withMessage('후기 점수는 정수만 입력 가능합니다.'),
   body('content').trim().isLength({ min: 2 }).withMessage('2글자 이상 입력해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -29,7 +29,7 @@ router.post('/', jwtAuth.auth('user'), [
       required: true,
       content: {
         "application/json": {
-          schema: { $ref: '#components/schemas/orderReplyCreate' },
+          schema: { $ref: '#components/schemas/orderReviewCreate' },
         }
       }
     },
@@ -37,7 +37,7 @@ router.post('/', jwtAuth.auth('user'), [
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/orderReplyCreateRes" },
+          schema: { $ref: "#/components/schemas/orderReviewCreateRes" },
         }
       }
     }
@@ -69,19 +69,19 @@ router.post('/', jwtAuth.auth('user'), [
   */
 
 
-  try{
-    const replyModel = req.model.reply;
+  try {
+    const reviewModel = req.model.review;
 
-    const reply = req.body;
-    reply.user_id = req.user._id;
-    reply.user = {
+    const review = req.body;
+    review.user_id = req.user._id;
+    review.user = {
       _id: req.user._id,
       name: req.user.name,
       image: req.user.image
     };
-    const item = await replyModel.create(reply);
-    res.status(201).json({ok: 1, item});
-  }catch(err){
+    const item = await reviewModel.create(review);
+    res.status(201).json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
@@ -90,7 +90,7 @@ router.post('/', jwtAuth.auth('user'), [
 router.get('/products/:_id', [
   query('rating').optional().isInt().withMessage('후기 점수는 정수만 입력 가능합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -120,7 +120,7 @@ router.get('/products/:_id', [
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/replyListRes" }
+          schema: { $ref: "#/components/schemas/reviewListRes" }
         }
       }
     }
@@ -135,14 +135,14 @@ router.get('/products/:_id', [
     }
   */
 
-  try{
-    const replyModel = req.model.reply;
+  try {
+    const reviewModel = req.model.review;
     let search = {
       product_id: Number(req.params._id)
     };
     const rating = Number(req.query.rating);
 
-    if(rating){
+    if (rating) {
       search.rating = rating;
     }
 
@@ -153,15 +153,15 @@ router.get('/products/:_id', [
     // 기본 정렬 옵션은 _id의 내림차순
     sortBy['_id'] = sortBy['_id'] || -1; // 내림차순
 
-    const item = await replyModel.findBy(search, sortBy);
-    res.json({ok: 1, item});
-  }catch(err){
+    const item = await reviewModel.findBy(search, sortBy);
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
 
 // 모든 후기 목록 조회
-router.get('/all', async function(req, res, next) {
+router.get('/all', async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -172,7 +172,7 @@ router.get('/all', async function(req, res, next) {
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/replyListRes" }
+          schema: { $ref: "#/components/schemas/reviewListRes" }
         }
       }
     }
@@ -188,17 +188,17 @@ router.get('/all', async function(req, res, next) {
     
   */
 
-  try{
-    const replyModel = req.model.reply;
-    const item = await replyModel.findBy();
-    res.json({ok: 1, item});
-  }catch(err){
+  try {
+    const reviewModel = req.model.review;
+    const item = await reviewModel.findBy();
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
 
 // 후기 상세 조회
-router.get('/:_id', async function(req, res, next) {
+router.get('/:_id', async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -216,7 +216,7 @@ router.get('/:_id', async function(req, res, next) {
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/replyInfoRes" }
+          schema: { $ref: "#/components/schemas/reviewInfoRes" }
         }
       }
     }
@@ -238,21 +238,21 @@ router.get('/:_id', async function(req, res, next) {
     }
   */
 
-  try{
-    const replyModel = req.model.reply;
-    const item = await replyModel.findBy({ _id: Number(req.params._id) });
-    if(item){
+  try {
+    const reviewModel = req.model.review;
+    const item = await reviewModel.findBy({ _id: Number(req.params._id) });
+    if (item) {
       res.json({ ok: 1, item });
-    }else{
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 내 후기 목록 조회
-router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
+router.get('/', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -267,7 +267,7 @@ router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/replyListRes" }
+          schema: { $ref: "#/components/schemas/reviewListRes" }
         }
       }
     }
@@ -289,17 +289,17 @@ router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
     }
   */
 
-  try{
-    const replyModel = req.model.reply;
-    const item = await replyModel.findBy( { user_id: req.user._id });
-    res.json({ok: 1, item});
-  }catch(err){
+  try {
+    const reviewModel = req.model.review;
+    const item = await reviewModel.findBy({ user_id: req.user._id });
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
 
 // 판매자 후기 목록 조회
-router.get('/seller/:seller_id', async function(req, res, next) {
+router.get('/seller/:seller_id', async function (req, res, next) {
 
   /*
     #swagger.tags = ['구매 후기']
@@ -317,7 +317,7 @@ router.get('/seller/:seller_id', async function(req, res, next) {
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/sellerReplyListRes" }
+          schema: { $ref: "#/components/schemas/sellerReviewListRes" }
         }
       }
     }
@@ -333,12 +333,12 @@ router.get('/seller/:seller_id', async function(req, res, next) {
 
   */
 
-  try{
-    const replyModel = req.model.reply;
+  try {
+    const reviewModel = req.model.review;
     const seller_id = Number(req.params.seller_id);
-    const item = await replyModel.findBySeller(seller_id);
-    res.json({ok: 1, item});
-  }catch(err){
+    const item = await reviewModel.findBySeller(seller_id);
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });

@@ -1,29 +1,28 @@
-import _ from 'lodash';
 import moment from 'moment-timezone';
 
 import logger from '#utils/logger.js';
 
-class ReplyModel {
-  constructor(db, model){
+class ReviewModel {
+  constructor(db, model) {
     this.db = db;
     this.model = model;
   }
-  
+
   // 후기 등록
-  async create(replyInfo){
+  async create(reviewInfo) {
     logger.trace(arguments);
-    replyInfo._id = await this.db.nextSeq('reply');
-    replyInfo.createdAt = moment().tz('Asia/Seoul').format('YYYY.MM.DD HH:mm:ss');
-    
-    if(!replyInfo.dryRun){
-      await this.db.reply.insertOne(replyInfo);
-      await this.model.order.updateReplyId(replyInfo.order_id, replyInfo.product_id, replyInfo._id);
+    reviewInfo._id = await this.db.nextSeq('review');
+    reviewInfo.createdAt = moment().tz('Asia/Seoul').format('YYYY.MM.DD HH:mm:ss');
+
+    if (!reviewInfo.dryRun) {
+      await this.db.review.insertOne(reviewInfo);
+      await this.model.order.updateReviewId(reviewInfo.order_id, reviewInfo.product_id, reviewInfo._id);
     }
-    return replyInfo;
+    return reviewInfo;
   }
 
   // 조건에 맞는 후기 목록 조회
-  async findBy( query={}, sortBy ){
+  async findBy(query = {}, sortBy) {
     logger.trace(arguments);
 
     const pipeline = [
@@ -36,7 +35,7 @@ class ReplyModel {
           as: 'product'
         }
       },
-      { $unwind: '$product' }, 
+      { $unwind: '$product' },
       {
         $lookup: {
           from: 'user',
@@ -44,8 +43,8 @@ class ReplyModel {
           foreignField: '_id',
           as: 'user'
         }
-      }, 
-      { $unwind: '$user' }, 
+      },
+      { $unwind: '$user' },
       {
         $project: {
           _id: 1,
@@ -60,7 +59,7 @@ class ReplyModel {
           'user.image': '$user.image',
           'user.name': {
             $concat: [
-              { $substrCP: ['$user.name', 0, 1 ] }, // 첫 번째 문자 추출
+              { $substrCP: ['$user.name', 0, 1] }, // 첫 번째 문자 추출
               {
                 $reduce: {
                   input: { $range: [1, { $strLenCP: '$user.name' }] }, // 첫 문자 이후의 길이 범위
@@ -76,49 +75,49 @@ class ReplyModel {
       }
     ];
 
-    if(sortBy){
+    if (sortBy) {
       pipeline.push({ $sort: sortBy });
     }
 
-    let list = await this.db.reply.aggregate(pipeline).toArray();
+    let list = await this.db.review.aggregate(pipeline).toArray();
 
     logger.debug(list);
     return list;
   }
 
   // 후기만 조회
-  async findById(_id){
+  async findById(_id) {
     logger.trace(arguments);
 
-    const item = await this.db.reply.findOne({ _id });
+    const item = await this.db.review.findOne({ _id });
     logger.debug(item);
     return item;
   }
 
   // 판매자 후기 목록 조회
-  async findBySeller(seller_id){
+  async findBySeller(seller_id) {
     logger.trace(arguments);
 
     const list = await this.db.product.aggregate([
       { $match: { seller_id } },
       {
         $lookup: {
-          from: 'reply',
+          from: 'review',
           localField: '_id',
           foreignField: 'product_id',
-          as: 'reply'
+          as: 'review'
         }
       },
-      { $unwind: '$reply' }, 
+      { $unwind: '$review' },
       {
         $lookup: {
           from: 'user',
-          localField: 'reply.user_id',
+          localField: 'review.user_id',
           foreignField: '_id',
           as: 'user'
         }
-      }, 
-      { $unwind: '$user' }, 
+      },
+      { $unwind: '$user' },
       {
         $project: {
           // _id: 0,
@@ -126,11 +125,11 @@ class ReplyModel {
           price: 1,
           name: 1,
           'image': { $arrayElemAt: ['$mainImages', 0] },
-          'reply._id': '$reply._id',
-          'reply.extra': '$reply.extra',
-          'reply.user_name': {
+          'review._id': '$review._id',
+          'review.extra': '$review.extra',
+          'review.user_name': {
             $concat: [
-              { $substrCP: ['$user.name', 0, 1 ] }, // 첫 번째 문자 추출
+              { $substrCP: ['$user.name', 0, 1] }, // 첫 번째 문자 추출
               {
                 $reduce: {
                   input: { $range: [1, { $strLenCP: '$user.name' }] }, // 첫 문자 이후의 길이 범위
@@ -142,9 +141,9 @@ class ReplyModel {
               }
             ]
           },
-          'reply.rating': '$reply.rating',
-          'reply.content': '$reply.content',
-          'reply.createdAt': '$reply.createdAt',
+          'review.rating': '$review.rating',
+          'review.content': '$review.content',
+          'review.createdAt': '$review.createdAt',
         }
       },
       {
@@ -154,7 +153,7 @@ class ReplyModel {
           price: { $first: '$price' },
           name: { $first: '$name' },
           image: { $first: '$image' },
-          replies: { $push: '$reply' }
+          replies: { $push: '$review' }
         }
       }
     ]).sort({ _id: -1 }).toArray();
@@ -164,4 +163,4 @@ class ReplyModel {
   }
 }
 
-export default ReplyModel;
+export default ReviewModel;

@@ -1,10 +1,4 @@
-/* eslint-disable no-unused-vars */
-
 import moment from 'moment';
-
-function getDay(day = 0) {
-  return moment().add(day, 'days').format('YYYY.MM.DD');
-}
 
 function getTime(day = 0, second = 0) {
   return moment().add(day, 'days').add(second, 'seconds').format('YYYY.MM.DD HH:mm:ss');
@@ -20,9 +14,12 @@ export const initData = async (clientId, nextSeq) => {
         password: '$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2',
         name: '무지',
         type: 'admin',
-        image: `/files/${clientId}/user-muzi.webp`,
+        loginType: 'email',
         createdAt: getTime(-100, -60 * 60 * 3),
         updatedAt: getTime(-100, -60 * 60 * 3),
+        extra: {
+          birthday: '2000.01.31',
+        },
       },
       {
         _id: await nextSeq('user'),
@@ -30,68 +27,953 @@ export const initData = async (clientId, nextSeq) => {
         password: '$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2',
         name: '네오',
         type: 'seller',
+        loginType: 'email',
         image: `/files/${clientId}/user-neo.webp`,
         createdAt: getTime(-50),
         updatedAt: getTime(-30, -60 * 60 * 3),
+        extra: {
+          birthday: '1998.11.23',
+        },
+      },
+      {
+        _id: await nextSeq('user'),
+        email: 's2@market.com',
+        password: '$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2',
+        name: '어피치',
+        type: 'seller',
+        loginType: 'email',
+        image: `/files/${clientId}/user-apeach.webp`,
+        createdAt: getTime(-40, -60 * 30),
+        updatedAt: getTime(-30, -60 * 20),
+        extra: {
+          birthday: '2001.10.13',
+        },
       },
       {
         _id: await nextSeq('user'),
         email: 'u1@market.com',
         password: '$2b$10$S.8GNMDyvUF0xzujPtHBu.j5gtS19.OhRmYbpJBnCHg2S83WLx1T2',
-        name: '어피치',
+        name: '제이지',
         type: 'user',
-        createdAt: getTime(-40, -60 * 30),
-        updatedAt: getTime(-30, -60 * 20),
+        loginType: 'email',
+        image: `/files/${clientId}/user-jayg.webp`,
+        createdAt: getTime(-20, -60 * 30),
+        updatedAt: getTime(-10, -60 * 60 * 12),
+        extra: {
+          birthday: '1988.05.13',
+        },
       },
     ],
     // 상품
-    product: [],
+    product: [
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 19800,
+        shippingFees: 3000,
+        show: true,
+        active: true,
+        name: '나이키 에브리데이 플러스 쿠션',
+        quantity: 320,
+        buyQuantity: 310,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-dog.jpg`,
+            name: 'sample-dog.jpg',
+            originalname: '스턴트 독.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>캥거루 스턴트 독 로봇완구 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-41, -60 * 60 * 2),
+        updatedAt: getTime(-40, -60 * 15),
+        extra: {
+          isNew: true,
+          isBest: true,
+          category: ['PC03', 'PC0301'],
+          sort: 5,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 17260,
+        shippingFees: 2500,
+        show: true,
+        active: true,
+        name: '헬로카봇 스톰다이버',
+        quantity: 200,
+        buyQuantity: 198,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-diver.jpg`,
+            name: 'sample-diver.jpg',
+            originalname: '헬로카봇.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>헬로카봇 스톰다이버 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-38, -60 * 60 * 6),
+        updatedAt: getTime(-33, -60 * 55),
+        extra: {
+          isNew: false,
+          isBest: true,
+          category: ['PC01', 'PC0103'],
+          sort: 4,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 48870,
+        shippingFees: 0,
+        show: true,
+        active: true,
+        name: '레고 클래식 라지 조립 박스 10698',
+        quantity: 100,
+        buyQuantity: 99,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-classic.jpg`,
+            name: 'sample-classic.jpg',
+            originalname: '레고 클래식.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>레고 클래식 라지 조립 박스 10698 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-35, -60 * 60 * 6),
+        updatedAt: getTime(-10, -60 * 19),
+        extra: {
+          isNew: true,
+          isBest: true,
+          category: ['PC01', 'PC0103'],
+          sort: 3,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 45000,
+        shippingFees: 3500,
+        show: true,
+        active: true,
+        name: '레고 테크닉 42151 부가티 볼리드',
+        quantity: 100,
+        buyQuantity: 89,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-bugatti.png`,
+            name: 'sample-bugatti.png',
+            originalname: '부가티.png',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>레고 테크닉 42151 부가티 볼리드 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-33, -60 * 60 * 7),
+        updatedAt: getTime(-22, -60 * 60 * 3),
+        extra: {
+          isNew: false,
+          isBest: true,
+          category: ['PC03', 'PC0303'],
+          sort: 1,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 45000,
+        shippingFees: 3500,
+        show: true,
+        active: true,
+        name: '레고 마인크래프트 21246 깊고 어두운 전장',
+        quantity: 100,
+        buyQuantity: 98,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-minecraft.png`,
+            name: 'sample-minecraft.png',
+            originalname: '마인크래프트.png',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>레고 마인크래프트 21246 깊고 어두운 전장 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-30, -60 * 60 * 10),
+        updatedAt: getTime(-10, -60 * 56),
+        extra: {
+          isNew: true,
+          isBest: false,
+          today: true,
+          category: ['PC03', 'PC0303'],
+          sort: 2,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 54790,
+        shippingFees: 4000,
+        show: false,
+        active: true,
+        name: '레고 마블 76247 헐크버스터: 와칸다의 전투',
+        quantity: 100,
+        buyQuantity: 99,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-hulk.png`,
+            name: 'sample-hulk.png',
+            originalname: '헐크.png',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>레고 마블 76247 헐크버스터: 와칸다의 전투 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-30, -60 * 60 * 21),
+        updatedAt: getTime(-20, -60 * 10),
+        extra: {
+          isNew: false,
+          isBest: false,
+          category: ['PC03', 'PC0303'],
+          sort: 1,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 13000,
+        shippingFees: 3500,
+        show: true,
+        active: true,
+        name: '할리갈리 보드게임',
+        quantity: 100,
+        buyQuantity: 98,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-halligalli.jpg`,
+            name: 'sample-halligalli.jpg',
+            originalname: '할리갈리.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>할리갈리 보드게임 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-25, -60 * 60 * 12),
+        updatedAt: getTime(-24, -60 * 23),
+        extra: {
+          isNew: false,
+          isBest: true,
+          category: ['PC01', 'PC0102', 'PC010201'],
+          sort: 3,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 26000,
+        shippingFees: 3000,
+        show: true,
+        active: true,
+        name: '루미큐브 클래식',
+        quantity: 100,
+        buyQuantity: 97,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-rummikub.png`,
+            name: 'sample-rummikub.png',
+            originalname: '루미큐브.png',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>루미큐브 클래식 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-22, -60 * 60 * 22),
+        updatedAt: getTime(-20, -60 * 33),
+        extra: {
+          isNew: true,
+          isBest: true,
+          category: ['PC01', 'PC0102', 'PC010202'],
+          sort: 8,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 12000,
+        shippingFees: 3000,
+        show: true,
+        active: true,
+        name: '짱구는 못말려 숲속 산책 직소퍼즐',
+        quantity: 100,
+        buyQuantity: 96,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-jjangu.jpg`,
+            name: 'sample-jjangu.jpg',
+            originalname: '짱구.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>짱구는 못말려 숲속 산책 직소퍼즐 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-21, -60 * 60 * 4),
+        updatedAt: getTime(-16, -60 * 15),
+        extra: {
+          isNew: true,
+          isBest: false,
+          today: true,
+          category: ['PC03', 'PC0302'],
+          sort: 2,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 24000,
+        shippingFees: 0,
+        show: true,
+        active: true,
+        name: '라푼젤 그녀의 꿈 직소퍼즐 KD-1000-001 + 그림 엽서(랜덤) + 품질보증서',
+        quantity: 100,
+        buyQuantity: 95,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-rapunzel.jpg`,
+            name: 'sample-rapunzel.jpg',
+            originalname: '라푼젤.jpg',
+          },
+        ],
+        content: `
+          <div class="product-detail">
+            <p>라푼젤 그녀의 꿈 직소퍼즐 KD-1000-001 + 그림 엽서(랜덤) + 품질보증서 상세 설명</p>
+          </div>`,
+        createdAt: getTime(-18, -60 * 60 * 7),
+        updatedAt: getTime(-12, -60 * 33),
+        extra: {
+          isNew: false,
+          isBest: true,
+          category: ['PC01', 'PC0101'],
+          sort: 4,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 14400,
+        shippingFees: 3000,
+        show: true,
+        active: true,
+        name: 'KC인증 스키비디 토일렛 피규어 블럭 8종 중국 호환 레고 블록 장난감 어린이 선물',
+        quantity: 100,
+        buyQuantity: 94,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-skibidi01.jpg`,
+            name: 'sample-skibidi01.jpg',
+            originalname: '피규어1.jpg',
+          },
+          {
+            path: `/files/${clientId}/sample-skibidi02.jpg`,
+            name: 'sample-skibidi02.jpg',
+            originalname: '피규어2.jpg',
+          },
+        ],
+        content: `
+          <div align="center"><p>*크리스마스 배송 안내</p></div>
+          <div align="center"><p>택배사 물량 증가로 평소보다 2~3일 더 걸립니다.</p></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi03.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi04.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><p>*반품 안내</p></div>`,
+        createdAt: getTime(-16, -60 * 60 * 3),
+        updatedAt: getTime(-15, -60 * 45),
+        extra: {
+          isNew: false,
+          isBest: false,
+          today: true,
+          category: ['PC01', 'PC0103'], // 어린이 > 레고
+          sort: 6,
+        },
+      },
+      {
+        _id: await nextSeq('product'),
+        seller_id: 2,
+        price: 9000,
+        shippingFees: 3000,
+        show: true,
+        active: true,
+        name: '스키비디 토일렛 봉제 인형 (25cm-30cm) 시리즈 크리스마스 선물',
+        quantity: 999,
+        buyQuantity: 800,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-skibidi11.jpg`,
+            name: 'sample-skibidi11.jpg',
+            originalname: '토일렛.jpg',
+          },
+        ],
+        content: `
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi12.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi13.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi14.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi15.jpg"></div>`,
+        createdAt: getTime(-11, -60 * 60 * 12),
+        updatedAt: getTime(-5, -60 * 60 * 6),
+        extra: {
+          isNew: true,
+          isBest: true,
+          category: ['PC01', 'PC0103'], // 어린이 > 레고
+          sort: 7,
+        },
+      },
+      // 13번 상품
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 21600,
+        shippingFees: 5500,
+        show: true,
+        active: true,
+        name: 'KC인증 스키비디 토일렛 피규어 블럭 4종 중국 호환 레고 블록 장난감 어린이 선물',
+        quantity: 99,
+        buyQuantity: 94,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-skibidi21.jpg`,
+            name: 'sample-skibidi21.jpg',
+            originalname: '스키비디.jpg',
+          },
+        ],
+        content: `
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi22.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi23.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-skibidi24.jpg"></div>`,
+        createdAt: getTime(-10, -60 * 60 * 12),
+        updatedAt: getTime(-5, -60 * 60 * 6),
+        extra: {
+          isNew: true,
+          isBest: false,
+          category: ['PC01', 'PC0103'], // 어린이 > 레고
+          sort: 6,
+        },
+      },
+      // 14번 상품. shippingFees가 없을 경우 config.shippingFees 사용
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 12900,
+        // shippingFees: 3500,
+        show: true,
+        active: true,
+        name: '푸쉬팝게임기 팝잇 푸시팝 게임기 두더지게임 핑거 뽁뽁이 애니멀 1+1',
+        quantity: 300,
+        buyQuantity: 298,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-pushpop01.jpg`,
+            name: 'sample-pushpop01.jpg',
+            originalname: '푸쉬팝1.jpg',
+          },
+          {
+            path: `/files/${clientId}/sample-pushpop02.jpg`,
+            name: 'sample-pushpop02.jpg',
+            originalname: '푸쉬팝2.jpg',
+          },
+          {
+            path: `/files/${clientId}/sample-pushpop03.jpg`,
+            name: 'sample-pushpop03.jpg',
+            originalname: '푸쉬팝3.jpg',
+          },
+        ],
+        content: `
+          <div align="center"><p>푸쉬팝게임기 팝잇 푸시팝 게임기 두더지게임 핑거 뽁뽁이 애니멀을 구매하시는 모든 분께 사은품(무작위)으로 하나 더 드립니다.</p></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-pushpop04.gif"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-pushpop05.jpg"></div>
+          <div align="center"><br></div>
+          <div align="center"><img src="${process.env.API_HOST}/files/${clientId}/sample-pushpop06.jpg"></div>`,
+        createdAt: getTime(-3, -60 * 60 * 12),
+        updatedAt: getTime(-3, -60 * 60 * 12),
+        extra: {
+          isNew: false,
+          isBest: true,
+          category: ['PC01', 'PC0102'], // 어린이 > 보드게임
+          sort: 5,
+        },
+      },
+      // 15번 상품. 옵션이 있는 경우 메인 상품 정보
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 12900,
+        shippingFees: 3500,
+        show: true,
+        active: true,
+        name: '샤넬 NO.5',
+        quantity: 999999,
+        buyQuantity: 0,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-pushpop01.jpg`,
+            name: 'sample-pushpop01.jpg',
+            originalname: '샤넬.jpg',
+          },
+        ],
+        content: `샤넬 향수`,
+        createdAt: getTime(-3, -60 * 60 * 12),
+        updatedAt: getTime(-3, -60 * 60 * 12),
+        extra: {
+          depth: 1,
+        },
+      },
+      // 16번 상품. 옵션이 있는 경우 옵션 상품 정보. 15번 상품의 하위 상품(옵션)
+      {
+        _id: await nextSeq('product'),
+        seller_id: 3,
+        price: 6900,
+        shippingFees: 3500,
+        name: '샤넬 NO.5',
+        quantity: 1,
+        buyQuantity: 0,
+        show: true,
+        active: true,
+        mainImages: [
+          {
+            path: `/files/${clientId}/sample-pushpop03.jpg`,
+            name: 'sample-pushpop03.jpg',
+            originalname: '샤넬.jpg',
+          },
+        ],
+        content: `3달 쓴 향수입니다.`,
+        createdAt: getTime(-3, -60 * 60 * 12),
+        updatedAt: getTime(-3, -60 * 60 * 12),
+        extra: {
+          depth: 2,
+          parent: 15,
+          size: '200mm',
+        },
+      },
+    ],
     // 주문
-    order: [],
+    order: [
+      {
+        _id: await nextSeq('order'),
+        user_id: 4,
+        state: 'OS020',
+        products: [
+          {
+            _id: 2,
+            seller_id: 2,
+            state: 'OS020',
+            name: '헬로카봇 스톰다이버',
+            image: {
+              path: `/files/${clientId}/sample-diver.jpg`,
+              name: 'sample-diver.jpg',
+              originalname: '헬로카봇.jpg',
+            },
+            quantity: 2,
+            price: 34520,
+            reply_id: 3,
+          },
+        ],
+        cost: {
+          products: 34520,
+          shippingFees: 2500,
+          discount: {
+            products: 0,
+            shippingFees: 0,
+          },
+          total: 37020,
+        },
+        address: {
+          name: '회사',
+          value: '서울시 강남구 신사동 234',
+        },
+        createdAt: getTime(-6, -60 * 60 * 3),
+        updatedAt: getTime(-6, -60 * 60 * 3),
+      },
+      {
+        _id: await nextSeq('order'),
+        user_id: 4,
+        state: 'OS010',
+        products: [
+          {
+            _id: 3,
+            seller_id: 2,
+            state: 'OS010',
+            name: '레고 클래식 라지 조립 박스 10698',
+            image: {
+              path: `/files/${clientId}/sample-classic.jpg`,
+              name: 'sample-classic.jpg',
+              originalname: '레고 클래식.jpg',
+            },
+            quantity: 1,
+            price: 48870,
+          },
+          {
+            _id: 4,
+            seller_id: 3,
+            state: 'OS010',
+            name: '레고 테크닉 42151 부가티 볼리드',
+            image: {
+              path: `/files/${clientId}/sample-bugatti.png`,
+              name: 'sample-bugatti.png',
+              originalname: '부가티.png',
+            },
+            quantity: 2,
+            price: 90000,
+            reply_id: 2,
+          },
+        ],
+        cost: {
+          products: 138840,
+          shippingFees: 3500,
+          discount: {
+            products: 13880,
+            shippingFees: 3500,
+          },
+          total: 124960,
+        },
+        address: {
+          name: '집',
+          value: '서울시 강남구 역삼동 123',
+        },
+        createdAt: getTime(-4, -60 * 60 * 22),
+        updatedAt: getTime(-2, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('order'),
+        user_id: 4,
+        state: 'OS040',
+        products: [
+          {
+            _id: 4,
+            seller_id: 3,
+            state: 'OS110',
+            name: '레고 테크닉 42151 부가티 볼리드',
+            image: {
+              path: `/files/${clientId}/sample-bugatti.png`,
+              name: 'sample-bugatti.png',
+              originalname: '부가티.png',
+            },
+            quantity: 1,
+            price: 45000,
+            reply_id: 1,
+          },
+        ],
+        cost: {
+          products: 45000,
+          shippingFees: 3500,
+          discount: {
+            products: 4500,
+            shippingFees: 0,
+          },
+          total: 44000,
+        },
+        address: {
+          name: '학교',
+          value: '서울시 강남구 역삼동 234',
+        },
+        payment: {
+          success: true,
+          imp_uid: 'imp_138601212227',
+          pay_method: 'card',
+          merchant_uid: 'mid_1702540599641',
+          name: '레고 테크닉 42151 부가티 볼리드',
+          paid_amount: 45000,
+          currency: 'KRW',
+          pg_provider: 'html5_inicis',
+          pg_type: 'payment',
+          pg_tid: 'StdpayCARDINIpayTest20231214165706277441',
+          apply_num: '30123157',
+          buyer_name: '제이지',
+          buyer_email: 'aceppin@daum.net',
+          buyer_tel: '01044445555',
+          buyer_addr: '',
+          buyer_postcode: '',
+          custom_data: null,
+          status: 'paid',
+          paid_at: 1702540626,
+          receipt_url: 'https://iniweb.inicis.com/DefaultWebApp/mall/cr/cm/mCmReceipt_head.jsp?noTid=StdpayCARDINIpayTest20231214165706277441&noMethod=1',
+          card_name: '국민KB카드',
+          bank_name: null,
+          card_quota: 0,
+          card_number: '457973*********5',
+        },
+        delivery: {
+          company: '한진 택배',
+          trackingNumber: '364495958003',
+          url: 'https://trace.cjlogistics.com/next/tracking.html?wblNo=364495958003',
+        },
+        createdAt: getTime(-3, -60 * 60 * 18),
+        updatedAt: getTime(-1, -60 * 60 * 1),
+      },
+      {
+        _id: await nextSeq('order'),
+        user_id: 2,
+        state: 'OS040',
+        products: [
+          {
+            _id: 2,
+            seller_id: 2,
+            state: 'OS310',
+            name: '헬로카봇 스톰다이버',
+            image: {
+              path: `/files/${clientId}/sample-diver.jpg`,
+              name: 'sample-diver.jpg',
+              originalname: '헬로카봇.jpg',
+            },
+            quantity: 1,
+            price: 17260,
+            reply_id: 2,
+          },
+        ],
+        cost: {
+          products: 17260,
+          shippingFees: 2500,
+          discount: {
+            products: 0,
+            shippingFees: 0,
+          },
+          total: 19760,
+        },
+        address: {
+          name: '학교',
+          value: '서울시 강남구 역삼동 234',
+        },
+        delivery: {
+          company: '한진 택배',
+          trackingNumber: '364495958003',
+          url: 'https://trace.cjlogistics.com/next/tracking.html?wblNo=364495958003',
+        },
+        createdAt: getTime(-3, -60 * 60 * 18),
+        updatedAt: getTime(-1, -60 * 60 * 1),
+      },
+    ],
     // 후기
-    reply: [],
+    reply: [
+      {
+        _id: await nextSeq('reply'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: 'user-jayg.webp'
+        },
+        order_id: 1,
+        product_id: 2,
+        rating: 5,
+        content: '아이가 좋아해요.',
+        createdAt: getTime(-4, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('reply'),
+        user_id: 2,
+        user: {
+          _id: 2,
+          name: '네오',
+          image: 'user-neo.webp'
+        },
+        order_id: 4,
+        product_id: 2,
+        rating: 4,
+        content: '배송이 좀 느려요.',
+        createdAt: getTime(-3, -60 * 60 * 1),
+      },
+      {
+        _id: await nextSeq('reply'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: 'user-jayg.webp'
+        },
+        order_id: 2,
+        product_id: 3,
+        rating: 1,
+        content: '하루만에 고장났어요.',
+        extra: {
+          title: '추천하지 않습니다.',
+        },
+        createdAt: getTime(-2, -60 * 60 * 10),
+      },
+    ],
     // 장바구니
-    cart: [],
+    cart: [
+      {
+        _id: await nextSeq('cart'),
+        user_id: 4,
+        product_id: 1,
+        quantity: 2,
+        createdAt: getTime(-7, -60 * 30),
+        updatedAt: getTime(-7, -60 * 30),
+      },
+      {
+        _id: await nextSeq('cart'),
+        user_id: 4,
+        product_id: 2,
+        quantity: 1,
+        createdAt: getTime(-4, -60 * 30),
+        updatedAt: getTime(-3, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('cart'),
+        user_id: 2,
+        product_id: 3,
+        quantity: 2,
+        createdAt: getTime(-3, -60 * 60 * 4),
+        updatedAt: getTime(-3, -60 * 60 * 4),
+      },
+      {
+        _id: await nextSeq('cart'),
+        user_id: 2,
+        product_id: 4,
+        quantity: 3,
+        createdAt: getTime(-2, -60 * 60 * 12),
+        updatedAt: getTime(-1, -60 * 60 * 20),
+      },
+    ],
     // 즐겨찾기/북마크
-    bookmark: [],
-    // QnA, 공지사항, 게시판
+    bookmark: [
+      {
+        _id: await nextSeq('bookmark'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        type: 'product',
+        target_id: 2,
+        memo: '첫째 크리스마스 선물.',
+        createdAt: getTime(-3, -60 * 60 * 2),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        type: 'product',
+        target_id: 4,
+        memo: '둘째 생일 선물',
+        createdAt: getTime(-1, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        type: 'user',
+        target_id: 2,
+        memo: '단골 셀러',
+        createdAt: getTime(-2, -60 * 60 * 20),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        user_id: 4,
+        user: {
+          _id: 4,
+          name: '제이지',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        type: 'post',
+        target_id: 1,
+        memo: '크기 문의글 북마크',
+        createdAt: getTime(-1, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        user_id: 2,
+        user: {
+          _id: 2,
+          name: '네오',
+          image: `/files/${clientId}/user-neo.webp`
+        },
+        type: 'product',
+        target_id: 4,
+        memo: '1순위로 살것!',
+        createdAt: getTime(-1, -60 * 60 * 12),
+      },
+    ],
+    // QnA, 공지사항 등의 게시판
     post: [
       {
         _id: await nextSeq('post'),
-        type: 'info',
-        title: '정보 게시판 사용안내.',
+        type: 'qna',
+        product_id: 1,
+        seller_id: 2,
         views: 5,
         user: {
-          _id: 1,
-          name: '무지',
-          image: `/files/${clientId}/user-muzi.webp`,
+          _id: 4,
+          name: '제이지',
+          image: 'user-jayg.webp'
         },
-        content: '좋은 정보 많이 공유해 주세요.',
+        title: '크기가 얼만만한가요?',
+        content: '아이가 6살인데 가지고 놀기 적당한 크기인가요?',
         replies: [
           {
-            _id: await nextSeq('reply'),
+            _id: 1,
             user_id: 2,
             user: {
               _id: 2,
               name: '네오',
-              image: `/files/${clientId}/user-neo.webp`,
+              image: 'user-neo.webp'
             },
-            content: '1등',
+            content: '크기는 상품 상세정보에 나와 있습니다.',
             like: 5,
             createdAt: getTime(-2, -60 * 60 * 20),
             updatedAt: getTime(-2, -60 * 60 * 2),
           },
           {
-            _id: await nextSeq('reply'),
-            user_id: 3,
+            _id: 2,
+            user_id: 4,
             user: {
-              _id: 3,
-              name: '어피치',
+              _id: 4,
+              name: '제이지',
+              image: 'user-jayg.webp'
             },
-            content: '넵',
+            content: '어디있나 모르겠어요.',
             like: 7,
             createdAt: getTime(-2, -60 * 60 * 10),
             updatedAt: getTime(-2, -60 * 60 * 1),
+          },
+          {
+            _id: 3,
+            user_id: 2,
+            user: {
+              _id: 2,
+              name: '네오',
+              image: 'user-neo.webp'
+            },
+            content: '높이 60cm 입니다.',
+            like: 3,
+            createdAt: getTime(-2, -60 * 60 * 9),
+            updatedAt: getTime(-1, -60 * 60 * 20),
           },
         ],
         createdAt: getTime(-3, -60 * 60 * 2),
@@ -99,167 +981,523 @@ export const initData = async (clientId, nextSeq) => {
       },
       {
         _id: await nextSeq('post'),
-        type: 'music',
-        title: '음악 신청 게시판 사용 방법입니다.',
-        content: '안녕하세요.\r\n오늘 일일 DJ를 하게 된 용디입니다.\r\n\r\n누구나 DJ 게시글에 글을 등록하면 DJ가 될 수 있습니다.\r\n신청곡은 해당 게시글에 댓글로 요청하면 되고 등록한 순서대로 자동 재생이됩니다.\r\n사연도 같이 등록하면 자동으로 사연을 읽어주고 신청곡이 재생됩니다.\r\n\r\n재생할 신청곡이 없으면 DJ가 선곡한 곡이 순서대로 재생되고 한 곡 재생이 완료되면 새로운 신청곡을 체크해서 신청곡이 재생됩니다.',
-        videoInfoList: [
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'E0C-tN9QJ3Q',
-            extra: {
-              title: '박혜경 - Rain (2002年)',
-            },
-            user: {
-              _id: 3,
-              name: '',
-            },
-            content: '',
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'iSwxR-eO0QM',
-            extra: {
-              title: '이럴거면(가사) 아이비',
-            },
-            user: {
-              _id: 3,
-              name: '',
-            },
-            content: '',
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'wq4HlLqYyRY',
-            extra: {
-              title: '헤이즈 (Heize) -  비가 오는 날엔 (2021) / 가사',
-            },
-            user: {
-              _id: 3,
-              name: '',
-            },
-            content: '',
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'atz_aZA3rf0',
-            extra: {
-              title: 'Ne-Yo - Because Of You (Official Music Video)',
-            },
-            user: {
-              _id: 3,
-              name: '',
-            },
-            content: '',
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'CGxUd7kjnuA',
-            extra: {
-              title: '허각 - 나를 잊지 말아요 [최고의 사랑 OST] [가사/Lyrics]',
-            },
-            user: {
-              _id: 3,
-              name: '',
-            },
-            content: '',
-          },
-        ],
-        views: 318,
+        type: 'qna',
+        product_id: 1,
+        seller_id: 2,
+        views: 50,
         user: {
-          _id: 3,
-          name: '어피치',
-          image: '/files/00-next-level/user-apeach.webp',
+          _id: 4,
+          name: '제이지',
+          image: 'user-jayg.webp'
         },
-        createdAt: getTime(-3, -60 * 60 * 20),
-        updatedAt: getTime(-2, -60 * 60 * 10),
-        seller_id: null,
-        replies: [
-          {
-            _id: await nextSeq('reply'),
-            videoId: '4TWR90KJl84',
-            content: '넥스트 레베루 프로젝트니까 next level 신청합니다.',
-            extra: {
-              title: "aespa 에스파 'Next Level' MV",
-              thumbnail: 'https://i.ytimg.com/vi/4TWR90KJl84/default.jpg'
-            },  
-            user: {
-              _id: 2,
-              name: '네오',
-              image: `/files/${clientId}/user-neo.webp`
-            },
-            createdAt: getTime(-2, -60 * 60 * 20),
-            updatedAt: getTime(-2, -60 * 60 * 2)
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: '',
-            content: '그냥 댓글만 남겨봅니다.',
-            user: {
-              _id: 2,
-              name: '네오',
-              image: `/files/${clientId}/user-neo.webp`
-            },            
-            createdAt: getTime(-2, -60 * 60 * 20),
-            updatedAt: getTime(-2, -60 * 60 * 20)
-          },          
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'NIPtyAKxlRs',
-            content: '오늘처럼 비가 오는 날엔 이 노래죠',
-            extra: {
-              title: '에픽하이(Epik high) - 우산 (Feat. 윤하)',
-              thumbnail: 'https://i.ytimg.com/vi/NIPtyAKxlRs/default.jpg'
-            },
-            user: {
-              _id: 2,
-              name: '네오',
-              image: `/files/${clientId}/user-neo.webp`
-            },            
-            createdAt: getTime(-2, -60 * 60 * 13),
-            updatedAt: getTime(-2, -60 * 60 * 13)
-          },
-          {
-            _id: await nextSeq('reply'),
-            videoId: 'RKhsHGfrFmY',
-            content: '',
-            extra: {
-              title: 'G-DRAGON - 삐딱하게(CROOKED) M/V',
-              thumbnail: 'https://i.ytimg.com/vi/RKhsHGfrFmY/default.jpg'
-            },
-            user: {
-              _id: 2,
-              name: '네오',
-              image: `/files/${clientId}/user-neo.webp`
-            },            
-            createdAt: getTime(-2, -60 * 60 * 10),
-            updatedAt: getTime(-2, -60 * 60 * 10)
-          }
-        ]
-      }
+        title: '이번주 토요일까지 받아볼 수 있을까요?',
+        content: '토요일 생일 선물로 준비중인데 그때까지 배송 가능할까요?',
+        createdAt: getTime(-2, -60 * 60 * 1),
+        updatedAt: getTime(-1, -60 * 60 * 20),
+      },
+      {
+        _id: await nextSeq('post'),
+        type: 'qna',
+        product_id: 4,
+        seller_id: 3,
+        views: 0,
+        user: {
+          _id: 2,
+          name: '네오',
+          image: 'user-neo.webp'
+        },
+        title: '배송 빨리 보내주세요.',
+        content: '양품으로 보내주세요.',
+        createdAt: getTime(-1, -60 * 60 * 14),
+        updatedAt: getTime(-1, -60 * 60 * 2),
+      },
+      {
+        _id: await nextSeq('post'),
+        type: 'notice',
+        views: 10,
+        user: {
+          _id: 1,
+          name: '무지',
+          image: 'user-muzi.webp'
+        },
+        title: '배송지연 안내',
+        content: '크리스마스 물류 증가로 인해 평소보다 2~3일 지연될 예정입니다.',
+        createdAt: getTime(-4, -60 * 60 * 2),
+        updatedAt: getTime(-2, -60 * 60 * 13),
+      },
+      {
+        _id: await nextSeq('post'),
+        type: 'notice',
+        views: 15,
+        user: {
+          _id: 1,
+          name: '무지',
+          image: 'user-muzi.webp'
+        },
+        title: '배송비 인상 안내',
+        content: '택배사 배송비 인상으로 인해 기존 3,000원에서 3,500원으로 인상됩니다.',
+        createdAt: getTime(-6, -60 * 60 * 20),
+        updatedAt: getTime(-4, -60 * 60 * 13),
+      },
     ],
     // 코드
     code: [
       {
-        _id: 'activePost',
-        title: '활성 게시판',
+        _id: 'productCategory',
+        title: '상품 카테고리',
         codes: [
           {
-            sort: 2,
-            code: 'AP01',
-            value: '문의 게시판',
-            active: false, // 활성 여부
-          },
-          {
             sort: 1,
-            code: 'AP02',
-            value: '정보 공유', // 게시판 이름
-            active: true,
+            code: 'PC01',
+            value: 'Men',
+            depth: 1,
           },
           {
             sort: 3,
-            code: 'AP03',
-            value: '음악 신청',
-            active: true,
+            code: 'PC0101',
+            value: '용품',
+            parent: 'PC01',
+            depth: 2,
+          },
+          {
+            sort: 1,
+            code: 'PC0102',
+            value: '신발',
+            parent: 'PC01',
+            depth: 2,
+          },
+          {
+            sort: 2,
+            code: 'PC0103',
+            value: '의류',
+            parent: 'PC01',
+            depth: 2,
+          },
+          {
+            sort: 2,
+            code: 'PC010101',
+            value: '모자 & 헤드밴드',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 1,
+            code: 'PC010102',
+            value: '가방',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 3,
+            code: 'PC010103',
+            value: '장갑',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 4,
+            code: 'PC010104',
+            value: '슬리브 & 암 밴드',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 5,
+            code: 'PC010105',
+            value: '공',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 6,
+            code: 'PC010106',
+            value: '보호대',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 2,
+            code: 'PC010201',
+            value: '조던',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 1,
+            code: 'PC010202',
+            value: '라이프스타일',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 3,
+            code: 'PC010203',
+            value: '러닝',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 4,
+            code: 'PC010204',
+            value: '농구',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 5,
+            code: 'PC010205',
+            value: '미식축구',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 6,
+            code: 'PC010206',
+            value: '축구',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 7,
+            code: 'PC010207',
+            value: '트레이닝 및 짐',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 8,
+            code: 'PC010208',
+            value: '스케이트보딩',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 9,
+            code: 'PC010209',
+            value: '골프',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 10,
+            code: 'PC010210',
+            value: '테니스',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 11,
+            code: 'PC010211',
+            value: '샌들 & 슬리퍼',
+            parent: 'PC0102',
+            depth: 3,
+          },
+
+          {
+            sort: 1,
+            code: 'PC010301',
+            value: '탑 & 티셔츠',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 2,
+            code: 'PC010302',
+            value: '후디 & 크루',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 3,
+            code: 'PC010303',
+            value: '재킷 & 베스트',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 4,
+            code: 'PC010304',
+            value: '팬츠 & 타이즈',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 5,
+            code: 'PC010305',
+            value: '트랙수트',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 6,
+            code: 'PC010306',
+            value: '쇼츠',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 7,
+            code: 'PC010307',
+            value: '점프수트 & 롬퍼스',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 8,
+            code: 'PC010308',
+            value: '서핑 & 수영복',
+            parent: 'PC0103',
+            depth: 3,
+          },
+          {
+            sort: 9,
+            code: 'PC010309',
+            value: '양말',
+            parent: 'PC0103',
+            depth: 3,
+          },
+
+
+
+          {
+            sort: 2,
+            code: 'PC02',
+            value: 'Women',
+            depth: 1,
+          },
+          {
+            sort: 3,
+            code: 'PC0101',
+            value: '스포츠 브라',
+            parent: 'PC02',
+            depth: 2,
+          },
+          {
+            sort: 2,
+            code: 'PC0102',
+            value: '의류',
+            parent: 'PC02',
+            depth: 2,
+          },
+          {
+            sort: 1,
+            code: 'PC0103',
+            value: '신발',
+            parent: 'PC02',
+            depth: 2,
+          },
+          {
+            sort: 4,
+            code: 'PC0104',
+            value: '타이츠 & 레깅스',
+            parent: 'PC02',
+            depth: 2,
+          },
+          {
+            sort: 1,
+            code: 'PC010101',
+            value: '라이트 서포트',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 1,
+            code: 'PC010101',
+            value: '라이트 서포트',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 2,
+            code: 'PC010102',
+            value: '미디움 서포트',
+            parent: 'PC0101',
+            depth: 3,
+          },
+          {
+            sort: 3,
+            code: 'PC010103',
+            value: '하이 서포트',
+            parent: 'PC0101',
+            depth: 3,
+          },
+
+          {
+            sort: 1,
+            code: 'PC010201',
+            value: '탑 & 티셔츠',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 2,
+            code: 'PC010202',
+            value: '스포츠 브라',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 3,
+            code: 'PC010203',
+            value: '후디 & 크루',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 4,
+            code: 'PC010204',
+            value: '쇼츠',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 5,
+            code: 'PC010205',
+            value: '팬츠 & 타이츠',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 6,
+            code: 'PC010206',
+            value: '재킷 & 베스트',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 7,
+            code: 'PC010207',
+            value: '트랙수트',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 8,
+            code: 'PC010208',
+            value: '점프수트 & 롬퍼스',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 9,
+            code: 'PC010209',
+            value: '스커트 & 드레스',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 10,
+            code: 'PC010210',
+            value: '서핑 & 수영복',
+            parent: 'PC0102',
+            depth: 3,
+          },
+          {
+            sort: 11,
+            code: 'PC010211',
+            value: '양말',
+            parent: 'PC0102',
+            depth: 3,
+          },
+        ],
+      },
+      {
+        _id: 'orderState',
+        title: '주문 상태',
+        codes: [
+          {
+            sort: 1,
+            code: 'OS010',
+            value: '주문 완료',
+          },
+          {
+            sort: 2,
+            code: 'OS020',
+            value: '결제 완료',
+          },
+          {
+            sort: 3,
+            code: 'OS030',
+            value: '배송 준비중',
+          },
+          {
+            sort: 4,
+            code: 'OS035',
+            value: '배송중',
+          },
+          {
+            sort: 5,
+            code: 'OS040',
+            value: '배송 완료',
+          },
+          {
+            sort: 6,
+            code: 'OS110',
+            value: '반품 요청',
+          },
+          {
+            sort: 7,
+            code: 'OS120',
+            value: '반품 처리중',
+          },
+          {
+            sort: 8,
+            code: 'OS130',
+            value: '반품 완료',
+          },
+          {
+            sort: 9,
+            code: 'OS210',
+            value: '교환 요청',
+          },
+          {
+            sort: 10,
+            code: 'OS220',
+            value: '교환 처리중',
+          },
+          {
+            sort: 11,
+            code: 'OS230',
+            value: '교환 완료',
+          },
+          {
+            sort: 12,
+            code: 'OS310',
+            value: '환불 요청',
+          },
+          {
+            sort: 13,
+            code: 'OS320',
+            value: '환불 처리중',
+          },
+          {
+            sort: 14,
+            code: 'OS330',
+            value: '환불 완료',
+          },
+        ],
+      },
+      {
+        _id: 'membershipClass',
+        title: '회원 등급',
+        codes: [
+          {
+            sort: 1,
+            code: 'MC01',
+            value: '일반',
+            discountRate: 0, // 할인율
+          },
+          {
+            sort: 2,
+            code: 'MC02',
+            value: '프리미엄',
+            discountRate: 10,
+          },
+          {
+            sort: 3,
+            code: 'MC03',
+            value: 'VIP',
+            discountRate: 20,
           },
         ],
       },
@@ -277,5 +1515,5 @@ export const initData = async (clientId, nextSeq) => {
         value: 50000,
       },
     ],
-  }
+  };
 };

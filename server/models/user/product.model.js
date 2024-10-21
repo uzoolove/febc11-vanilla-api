@@ -1,22 +1,22 @@
 import logger from '#utils/logger.js';
 
 class ProductModel {
-  constructor(db, model){
+  constructor(db, model) {
     this.db = db;
     this.model = model;
   }
-  
+
   // 상품 검색
-  async findBy({ sellerId, search={}, sortBy={}, page=1, limit, depth, showSoldOut, userId }){
+  async findBy({ sellerId, search = {}, sortBy = {}, page = 1, limit, depth, showSoldOut, userId }) {
     const query = { active: true, ...search };
 
-    if(sellerId){
+    if (sellerId) {
       // 판매자가 조회할 경우 자신의 상품만 조회
       query['seller_id'] = sellerId;
-    }else{
+    } else {
       // 일반 회원이 조회할 경우
       query['show'] = true;
-      if(depth !== 2 && !showSoldOut){ // 옵션 목록 조회가 아니고 showSoldOut이 true로 전달되지 않는 경우 품절된 상품 제외
+      if (depth !== 2 && !showSoldOut) { // 옵션 목록 조회가 아니고 showSoldOut이 true로 전달되지 않는 경우 품절된 상품 제외
         query['$expr'] = {
           '$gt': ['$quantity', '$buyQuantity']
         };
@@ -25,7 +25,7 @@ class ProductModel {
 
     logger.trace(query);
 
-    const skip = (page-1) * limit;
+    const skip = (page - 1) * limit;
     const totalCount = await this.db.product.countDocuments(query);
 
     const pipeline = [
@@ -43,26 +43,26 @@ class ProductModel {
       },
       // { $unwind: "$seller" },
 
-      { 
+      {
         $unwind: {
           path: "$seller",
           preserveNullAndEmptyArrays: true
         }
       },
 
-      
+
       // 후기 목록
       {
         $lookup: {
-          from: "reply",
+          from: "review",
           localField: "_id",
           foreignField: "product_id",
-          as: "replyItems"
+          as: "reviewItems"
         }
-      },      
+      },
       {
         $addFields: {
-          replies: { $size: "$replyItems" }
+          replies: { $size: "$reviewItems" }
         }
       },
 
@@ -71,8 +71,8 @@ class ProductModel {
         $addFields: {
           rating: {
             $cond: {
-              if: { $gt: [{ $size: "$replyItems" }, 0] }, // replyItems 배열이 존재하고 요소가 있을 때
-              then: { $avg: "$replyItems.rating" },        // rating 계산
+              if: { $gt: [{ $size: "$reviewItems" }, 0] }, // reviewItems 배열이 존재하고 요소가 있을 때
+              then: { $avg: "$reviewItems.rating" },        // rating 계산
               else: "$$REMOVE"                             // 필드를 제거
             }
           }
@@ -100,7 +100,7 @@ class ProductModel {
         }
       },
 
-      
+
       {
         $addFields: {
           bookmarks: { $size: "$bookmarkItems" }, // 북마크 목록 수
@@ -127,7 +127,7 @@ class ProductModel {
         }
       },
 
-      { 
+      {
         $unwind: {
           path: "$myBookmarkId",
           preserveNullAndEmptyArrays: true
@@ -159,11 +159,11 @@ class ProductModel {
         }
       },
 
-      { 
-        $project: { 
+      {
+        $project: {
           content: 0,
           bookmarkItems: 0,
-          replyItems: 0,
+          reviewItems: 0,
           optionItems: 0,
           'seller.password': 0,
           'seller.refreshToken': 0,
@@ -171,9 +171,9 @@ class ProductModel {
           'seller.loginType': 0,
           'seller.createdAt': 0,
           'seller.updatedAt': 0,
-        } 
+        }
       },
-      
+
       // 정렬
       { $sort: sortBy },
 
@@ -185,16 +185,16 @@ class ProductModel {
 
 
     // const skip = (page-1) * limit;
-    
+
     // logger.debug(query);
     // const totalCount = await this.db.product.countDocuments(query);
     // let list = await this.db.product.find(query).project({ content: 0 }).skip(skip).limit(limit).toArray();
     // // const list = await this.db.product.find(query).project({ content: 0 }).skip(skip).limit(limit).sort(sortBy).toArray();
     // for(const item of list){
     //   if(item.extra?.depth === 2){
-    //     item.replies = (await this.model.reply.findBy({ product_id: item._id }));
+    //     item.replies = (await this.model.review.findBy({ product_id: item._id }));
     //   }else{
-    //     item.replies = (await this.model.reply.findBy({ product_id: item._id })).length;
+    //     item.replies = (await this.model.review.findBy({ product_id: item._id })).length;
     //   }
     //   item.bookmarks = (await this.model.bookmark.findByProduct(item._id)).length;
     //   if(item.extra?.depth === 1){ // 옵션이 있는 상품일 경우
@@ -214,7 +214,7 @@ class ProductModel {
     // list = _.orderBy(list, sortKeys, orders);
 
     const result = { item: list };
-    if(depth !== 2){  // 옵션 목록 조회가 아닐 경우에만 pagination 필요
+    if (depth !== 2) {  // 옵션 목록 조회가 아닐 경우에만 pagination 필요
       result.pagination = {
         page,
         limit,
@@ -228,11 +228,11 @@ class ProductModel {
   }
 
   // 상품 상세 조회
-  async findById({ _id, userId }){
+  async findById({ _id, userId }) {
     logger.trace(arguments);
 
     const item = await this.db.product.aggregate([
-      { $match: { _id }},
+      { $match: { _id } },
       // 판매자 정보 추가
       {
         $lookup: {
@@ -243,11 +243,11 @@ class ProductModel {
         }
       },
       { $unwind: "$seller" },
-      
+
       // 후기 목록
       {
         $lookup: {
-          from: "reply",
+          from: "review",
           localField: "_id",
           foreignField: "product_id",
           as: "replies"
@@ -259,7 +259,7 @@ class ProductModel {
         $addFields: {
           rating: {
             $cond: {
-              if: { $gt: [{ $size: "$replies" }, 0] }, // replyItems 배열이 존재하고 요소가 있을 때
+              if: { $gt: [{ $size: "$replies" }, 0] }, // reviewItems 배열이 존재하고 요소가 있을 때
               then: { $avg: "$replies.rating" },        // rating 계산
               else: "$$REMOVE"                             // 필드를 제거
             }
@@ -313,7 +313,7 @@ class ProductModel {
         }
       },
 
-      { 
+      {
         $unwind: {
           path: "$myBookmarkId",
           preserveNullAndEmptyArrays: true
@@ -341,8 +341,8 @@ class ProductModel {
         }
       },
 
-      { 
-        $project: { 
+      {
+        $project: {
           bookmarkItems: 0,
           'seller.password': 0,
           'seller.refreshToken': 0,
@@ -354,7 +354,7 @@ class ProductModel {
           'replies.product_id': 0,
           'bookmarks.type': 0,
           'bookmarks.target_id': 0
-        } 
+        }
       },
     ]).next();
 
@@ -363,6 +363,6 @@ class ProductModel {
   }
 
 }
-  
+
 
 export default ProductModel;

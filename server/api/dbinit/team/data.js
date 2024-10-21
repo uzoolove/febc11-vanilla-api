@@ -17,35 +17,35 @@ export const initData = async (clientId, nextSeq) => {
     ],
     // 상품
     product: [
-      
+
     ],
     // 주문
     order: [
-      
+
     ],
     // 후기
-    reply: [
-      
+    review: [
+
     ],
     // 장바구니
     cart: [
-      
+
     ],
     // 즐겨찾기/북마크
     bookmark: [
-      
+
     ],
     // QnA, 공지사항, 게시판
     post: [
-      
+
     ],
     // 코드
     code: [
-      
+
     ],
     // 설정
     config: [
-      
+
     ],
   }
 };
