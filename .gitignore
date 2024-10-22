@@ -1,5 +1,6 @@
 ins
 server/swagger-output.json
+*.bak
 
 # Created by https://www.toptal.com/developers/gitignore/api/node,windows,osx,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=node,windows,osx,visualstudiocode
