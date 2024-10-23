@@ -5,13 +5,15 @@ meta {
 }
 
 get {
-  url: {{url}}/products?custom={  "$and": [ {"price": {"$gte": 100000}}, {"price": {"$lte": 150000}} ] }
+  url: {{url}}/products?minPrice=100000&maxPrice=150000
   body: none
   auth: none
 }
 
 params:query {
-  custom: {  "$and": [ {"price": {"$gte": 100000}}, {"price": {"$lte": 150000}} ] }
+  minPrice: 100000
+  maxPrice: 150000
+  ~custom: {  "$and": [ {"price": {"$gte": 100000}}, {"price": {"$lte": 150000}} ] }
   ~custom: {  "$and": [ {"price": {"$gte": 50000}}, {"price": {"$lte": 100000}} ] }
   ~custom: {"price": {"$lte": 50000}}
   ~custom: {  "$and": [ {"price": {"$gte": 150000}}, {"price": {"$lte": 200000}} ] }
