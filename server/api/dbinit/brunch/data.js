@@ -530,7 +530,7 @@ export const initData = async (clientId, nextSeq) => {
         user: {
           _id: 4,
           name: 'AI러 이채문',
-          image: '/files/00-next-level/user-apeach.webp',
+          image: `/files/${clientId}/user-apeach.webp`,
         },
         createdAt: getTime(-3, -60 * 60 * 20),
         updatedAt: getTime(-2, -60 * 60 * 10),
