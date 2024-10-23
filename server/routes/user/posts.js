@@ -11,7 +11,7 @@ router.post('/', jwtAuth.auth('user', true), [
   body('title').optional().trim().isLength({ min: 2 }).withMessage('제목은 2글자 이상 입력해야 합니다.'),
   body('content').optional().trim().isLength({ min: 2 }).withMessage('내용은 2글자 이상 입력해야 합니다.'),
   body('tag').optional().trim().isLength({ min: 2 }).withMessage('태그는 2글자 이상 입력해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -25,11 +25,12 @@ router.post('/', jwtAuth.auth('user', true), [
     #swagger.requestBody = {
       description: `게시글 정보가 저장된 객체입니다.<br>
         모든 속성은 선택사항입니다.<br>
-        type, title, content, tag 속성은 목록 조회에서 확인할 수 있습니다.<br>
+        type, title, content, image, tag 속성은 목록 조회에서 확인할 수 있습니다.<br>
         이외에 지정된 속성은 상세 조회에서만 확인할 수 있습니다.<br>
         type: 게시판 종류를 나타내고 게시판을 구분할 수 있는 이름이며 자유롭게 지정할 수 있고 게시물 목록 조회시 전달해야 합니다.(생략시 post)<br>
         title: 제목(키워드 검색에 사용)<br>
         content: 내용(키워드 검색에 사용)<br>
+        image: 첨부 이미지(여러개일 경우 배열로 전달)<br>
         tag: 태그(키워드 검색에 사용)<br>
         product_id: 상품 id를 나타내고 상품과 관련된 게시글일 경우에 어떤 상품에 대한 게시글인지 식별하기 위해 필요합니다.`,
       required: true,
@@ -78,15 +79,15 @@ router.post('/', jwtAuth.auth('user', true), [
     
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     let user = req.user;
-    if(!user){
+    if (!user) {
       user = { _id: 0, name: req.body.name || '익명' };
     }
     const item = await postModel.create({ ...req.body, views: 0, user });
-    res.status(201).json( {ok: 1, item} );
-  }catch(err){
+    res.status(201).json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
@@ -95,7 +96,7 @@ router.post('/', jwtAuth.auth('user', true), [
 router.get('/', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], jwtAuth.auth('user', true), validator.checkResult, async function(req, res, next) {
+], jwtAuth.auth('user', true), validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -159,18 +160,18 @@ router.get('/', [
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     let search = {};
     const keyword = req.query.keyword;
     const custom = req.query.custom;
 
-    if(keyword){
+    if (keyword) {
       const regex = new RegExp(keyword, 'i');
       search['$or'] = [{ title: regex }, { content: regex }, { tag: regex }];
     }
 
-    if(custom){
+    if (custom) {
       search = { ...search, ...JSON.parse(custom) };
     }
 
@@ -183,10 +184,10 @@ router.get('/', [
     const limit = Number(req.query.limit || 0);
 
     const result = await postModel.find({ type: req.query.type, userId: req.user?._id, search, sortBy, page, limit });
-    
+
 
     res.json({ ok: 1, ...result });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -195,7 +196,7 @@ router.get('/', [
 router.get('/users', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], jwtAuth.auth('user'), validator.checkResult, async function(req, res, next) {
+], jwtAuth.auth('user'), validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -259,20 +260,20 @@ router.get('/users', [
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = req.user._id;
 
     let search = { 'user._id': _id };
     const keyword = req.query.keyword;
     const custom = req.query.custom;
-    
-    if(keyword){
+
+    if (keyword) {
       const regex = new RegExp(keyword, 'i');
       search['$or'] = [{ title: regex }, { content: regex }];
     }
 
-    if(custom){
+    if (custom) {
       search = { ...search, ...JSON.parse(custom) };
     }
 
@@ -286,7 +287,7 @@ router.get('/users', [
 
     const item = await postModel.find({ type: req.query.type, userId: req.user?._id, search, sortBy, page, limit });
     res.json({ ok: 1, ...item });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -295,7 +296,7 @@ router.get('/users', [
 router.get('/users/:_id', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -366,20 +367,20 @@ router.get('/users/:_id', [
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
 
     let search = { 'user._id': _id };
     const keyword = req.query.keyword;
     const custom = req.query.custom;
-    
-    if(keyword){
+
+    if (keyword) {
       const regex = new RegExp(keyword, 'i');
       search['$or'] = [{ title: regex }, { content: regex }];
     }
 
-    if(custom){
+    if (custom) {
       search = { ...search, ...JSON.parse(custom) };
     }
 
@@ -393,7 +394,7 @@ router.get('/users/:_id', [
 
     const item = await postModel.find({ type: req.query.type, userId: req.user?._id, search, sortBy, page, limit });
     res.json({ ok: 1, ...item });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -402,7 +403,7 @@ router.get('/users/:_id', [
 router.get('/seller/:_id', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -478,49 +479,49 @@ router.get('/seller/:_id', [
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const sellerId = Number(req.params._id);
     const productId = Number(req.query.product_id);
     // if(req.user.type === 'seller' && sellerId === req.user._id){
 
-      let search = { seller_id: sellerId };
-      const keyword = req.query.keyword;
-      const custom = req.query.custom;
+    let search = { seller_id: sellerId };
+    const keyword = req.query.keyword;
+    const custom = req.query.custom;
 
-      if(productId){
-        search.product_id = productId;
-      }
+    if (productId) {
+      search.product_id = productId;
+    }
 
-      if(keyword){
-        const regex = new RegExp(keyword, 'i');
-        search['$or'] = [{ title: regex }, { content: regex }];
-      }
+    if (keyword) {
+      const regex = new RegExp(keyword, 'i');
+      search['$or'] = [{ title: regex }, { content: regex }];
+    }
 
-      if(custom){
-        search = { ...search, ...JSON.parse(custom) };
-      }
+    if (custom) {
+      search = { ...search, ...JSON.parse(custom) };
+    }
 
-      // 정렬 옵션
-      let sortBy = JSON.parse(req.query.sort || '{}');
-      // 기본 정렬 옵션은 _id의 내림차순
-      sortBy['_id'] = sortBy['_id'] || -1; // 내림차순
+    // 정렬 옵션
+    let sortBy = JSON.parse(req.query.sort || '{}');
+    // 기본 정렬 옵션은 _id의 내림차순
+    sortBy['_id'] = sortBy['_id'] || -1; // 내림차순
 
-      const page = Number(req.query.page || 1);
-      const limit = Number(req.query.limit || 0);
+    const page = Number(req.query.page || 1);
+    const limit = Number(req.query.limit || 0);
 
-      const item = await postModel.find({ type: req.query.type, userId: req.user?._id, search, sortBy, page, limit });
-      res.json({ ok: 1, ...item });
+    const item = await postModel.find({ type: req.query.type, userId: req.user?._id, search, sortBy, page, limit });
+    res.json({ ok: 1, ...item });
     // }else{
     //   next();
     // }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 게시글 상세 조회
-router.get('/:_id', jwtAuth.auth('user', true), async function(req, res, next) {
+router.get('/:_id', jwtAuth.auth('user', true), async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -564,27 +565,27 @@ router.get('/:_id', jwtAuth.auth('user', true), async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const item = await postModel.findById({ _id, userId: req.user?._id, incView: true });
-    if(item){
+    if (item) {
       // private 게시글일 경우 작성자 또는 share 목록에 등록된 사용자가 아니면 404 응답
-      if(item.private && !(item.user._id === req.user?._id || item.share?.includes(req.user?._id))){
+      if (item.private && !(item.user._id === req.user?._id || item.share?.includes(req.user?._id))) {
         next();
-      }else{
+      } else {
         res.json({ ok: 1, item });
       }
-    }else{
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 게시글 수정
-router.patch('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
+router.patch('/:_id', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -649,23 +650,23 @@ router.patch('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const post = await postModel.findById({ _id, userId: req.user._id });
-    if(post && (req.user.type === 'admin' || post.user._id == req.user._id)){
+    if (post && (req.user.type === 'admin' || post.user._id == req.user._id)) {
       const updated = await postModel.update(_id, req.body);
       res.json({ ok: 1, item: updated });
-    }else{
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 게시글 삭제
-router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
+router.delete('/:_id', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -720,17 +721,17 @@ router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
     
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const post = await postModel.findById({ _id, userId: req.user._id });
-    if(post && (req.user.type === 'admin' || post?.user._id == req.user._id)){
+    if (post && (req.user.type === 'admin' || post?.user._id == req.user._id)) {
       await postModel.delete(_id);
       res.json({ ok: 1 });
-    }else{
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -739,7 +740,7 @@ router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
 router.get('/:_id/replies', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -794,13 +795,13 @@ router.get('/:_id/replies', [
     }
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     let sortBy;
     // 정렬 옵션
-    if(req.query.sort){
+    if (req.query.sort) {
       sortBy = JSON.parse(req.query.sort);
-    }else{
+    } else {
       // 기본 정렬 옵션은 _id의 오름차순
       sortBy = { _id: 1 };
     }
@@ -811,15 +812,15 @@ router.get('/:_id/replies', [
     const result = await postModel.findReplies({ _id: Number(req.params._id), page, limit, sortBy });
 
     res.json({ ok: 1, ...result });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 댓글 등록
-router.post('/:_id/replies', jwtAuth.auth('user', true),  [
+router.post('/:_id/replies', jwtAuth.auth('user', true), [
   body('content').trim().isLength({ min: 2 }).withMessage('내용은 2글자 이상 입력해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['게시판']
@@ -872,11 +873,11 @@ router.post('/:_id/replies', jwtAuth.auth('user', true),  [
       
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const post = await postModel.findById({ _id, userId: req.user?._id });
-    if(post){
+    if (post) {
       const reply = req.body;
       // reply._id = (_.maxBy(post.replies, '_id')?._id || 0) + 1;
       reply.user = {
@@ -887,11 +888,11 @@ router.post('/:_id/replies', jwtAuth.auth('user', true),  [
       };
       // reply.user_id = req.user._id;
       const item = await postModel.createReply(_id, reply);
-      res.status(201).json({ok: 1, item});
-    }else{
+      res.status(201).json({ ok: 1, item });
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -910,19 +911,19 @@ router.patch('/:_id/replies/:reply_id', jwtAuth.auth('user'), async (req, res, n
     
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const reply_id = Number(req.params.reply_id);
     const post = await postModel.findById({ _id, userId: req.user._id });
     const reply = _.find(post?.replies, { _id: reply_id });
-    if(post && (req.user.type === 'admin' || reply?.user._id == req.user._id)){
+    if (post && (req.user.type === 'admin' || reply?.user._id == req.user._id)) {
       const item = await postModel.updateReply(_id, reply_id, req.body);
-      res.json({ ok: 1 , item });
-    }else{
+      res.json({ ok: 1, item });
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -941,19 +942,19 @@ router.delete('/:_id/replies/:reply_id', jwtAuth.auth('user'), async (req, res, 
     
   */
 
-  try{
+  try {
     const postModel = req.model.post;
     const _id = Number(req.params._id);
     const reply_id = Number(req.params.reply_id);
     const post = await postModel.findById({ _id, userId: req.user._id });
     const reply = _.find(post?.replies, { _id: reply_id });
-    if(post && (req.user.type === 'admin' || reply?.user._id == req.user._id)){
+    if (post && (req.user.type === 'admin' || reply?.user._id == req.user._id)) {
       await postModel.deleteReply(_id, reply_id);
       res.json({ ok: 1 });
-    }else{
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
