@@ -96,6 +96,7 @@ export const initData = async (clientId, nextSeq) => {
           name: 'AB',
           image: `/files/${clientId}/user-neo.webp`,
         },
+        image: `/files/${clientId}/no_shooni.jpg`,
         content: `
 <div class="wrap_body text_align_left finish_txt">
   <blockquote class="blockquote_type1 wrap_item item_type_text"
@@ -429,6 +430,7 @@ export const initData = async (clientId, nextSeq) => {
         extra: {
           subTitle: '토큰 소비 없이 사고 과정 프롬프팅 활용',
         },
+        image: `/files/${clientId}/exam1.png`,
         content: `
 <div class="wrap_body text_align_left finish_txt">
   <p class="wrap_item item_type_text"
