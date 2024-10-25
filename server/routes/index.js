@@ -5,9 +5,10 @@ import systemRouter from '#routes/system/index.js';
 import setModel from '#middlewares/setModel.js';
 
 import express from 'express';
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 
-router.use(/^(?!\/files\/).*$/, setModel);
+// /files로 시작하는 파일 링크일 경우 client-id 체크 안함(url이 /files인 파일 업로드는 체크함)
+router.use(/^\/files\/?$|^(?!\/files).*$/, setModel);
 // router.use('/', setModel);
 router.use('/', adminRouter);
 router.use('/', userRouter);
