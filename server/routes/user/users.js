@@ -20,7 +20,7 @@ router.post('/', [
   body('phone').optional().matches(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/).withMessage('휴대폰 형식에 맞지 않습니다.'),
   body('type').matches(/^(user|seller)$/).withMessage('회원 구분은 user 또는 seller로 전달해야 합니다.'),
   body('extra').optional().isObject().withMessage('extra 데이터는 객체로 전달해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '회원 가입'
@@ -76,11 +76,11 @@ router.post('/', [
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     const item = await userService.signup(userModel, req.body);
-    res.status(201).json({ok: 1, item});
-  }catch(err){
+    res.status(201).json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
@@ -88,7 +88,7 @@ router.post('/', [
 // 이메일 중복 체크
 router.get('/email', [
   query('email').isEmail().withMessage('이메일 형식에 맞지 않습니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '이메일 중복 체크'
@@ -122,15 +122,64 @@ router.get('/email', [
 
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     const user = await userModel.findBy({ email: req.query.email });
-    if(user){
+    if (user) {
       res.status(409).json({ ok: 0, message: '이미 등록된 이메일입니다.' });
-    }else{
+    } else {
       res.status(200).json({ ok: 1 });
     }
-  }catch(err){
+  } catch (err) {
+    next(err);
+  }
+});
+
+// 이름(name) 중복 체크
+router.get('/name', [
+  query('name').trim().notEmpty().withMessage('이름을 입력하세요.'),
+], validator.checkResult, async function (req, res, next) {
+  /*
+    #swagger.tags = ['회원']
+    #swagger.summary  = '이름(name) 중복 체크'
+    #swagger.description = '이름 중복 여부를 체크 합니다.'
+
+    #swagger.parameters['name'] = {
+      description: '이름',
+      in: 'query',
+      required: true,
+      type: 'string',
+      example: '무지'
+    }
+    
+    #swagger.responses[200] = {
+      description: '중복되지 않음',
+      content: {
+        "application/json": {
+          schema: { $ref: '#/components/schemas/simpleOK' }
+        }
+      }
+    }
+    #swagger.responses[409] = {
+      description: '이름 중복됨',
+      content: {
+        "application/json": {
+          schema: { $ref: '#/components/schemas/error409' }
+        }
+      }
+    }
+
+  */
+
+  try {
+    const userModel = req.model.user;
+    const user = await userModel.findBy({ name: req.query.name });
+    if (user) {
+      res.status(409).json({ ok: 0, message: '이미 등록된 이름입니다.' });
+    } else {
+      res.status(200).json({ ok: 1 });
+    }
+  } catch (err) {
     next(err);
   }
 });
@@ -143,7 +192,7 @@ router.post('/signup/oauth', [
   body('email').optional().isEmail().withMessage('이메일 형식에 맞지 않습니다.'),
   body('phone').optional().matches(/^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/).withMessage('휴대폰 형식에 맞지 않습니다.'),
   body('extra').optional().isObject().withMessage('extra 데이터는 객체로 전달해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = 'OAuth 인증 후 자동 회원 가입'
@@ -191,11 +240,11 @@ router.post('/signup/oauth', [
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     const item = await userService.signupOAuth(userModel, req.body);
-    res.status(201).json({ok: 1, item});
-  }catch(err){
+    res.status(201).json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
@@ -204,7 +253,7 @@ router.post('/signup/oauth', [
 router.post('/login', [
   body('email').isEmail().withMessage('이메일 형식에 맞지 않습니다.'),
   body('password').trim().isLength({ min: 8 }).withMessage('8자리 이상 입력해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '로그인'
@@ -259,22 +308,22 @@ router.post('/login', [
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     const user = await userService.login(userModel, req.body);
-    if(user.type === 'seller' && user.extra?.confirm === false){
+    if (user.type === 'seller' && user.extra?.confirm === false) {
       res.status(403).json({ ok: 0, message: '관리자의 승인이 필요합니다.' });
-    }else{
+    } else {
       res.json({ ok: 1, item: user });
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 카카오 로그인
 let authcodeList = {};
-router.post('/login/kakao', async function(req, res, next) {
+router.post('/login/kakao', async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '카카오 로그인'
@@ -320,7 +369,7 @@ router.post('/login/kakao', async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     logger.info(req.body);
     const authcode = req.body.code;
     const userData = req.body.user; // 카카오 회원정보 이외에 추가로 받은 회원 정보
@@ -329,7 +378,7 @@ router.post('/login/kakao', async function(req, res, next) {
     logger.error(userData)
 
     // 3초 안에 동일한 authcode로 인증 요청시(리액트의 Strict 모드로 구동시 개발환경에서 두번 요청할 때 회원가입 두번 되는 문제 방지)
-    if(authcodeList[authcode]){
+    if (authcodeList[authcode]) {
       return res.status(200).json({ ok: 1, message: '인증 처리중 입니다.' });
     }
     authcodeList[authcode] = true;
@@ -347,7 +396,7 @@ router.post('/login/kakao', async function(req, res, next) {
       code: authcode,
       client_secret: process.env.KAKAO_CLIENT_SECRET,  // 카카오 내 애플리케이션 > 보안 탭에서 발급함
     }), {
-      headers: {'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'}
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8' }
     });
     logger.info(getAccessTokenResponse.data);
 
@@ -371,8 +420,8 @@ router.post('/login/kakao', async function(req, res, next) {
 
     const userModel = req.model.user;
     let user = await userService.loginKakao(userModel, kakaoUserInfo.id);
-    
-    if(!user){
+
+    if (!user) {
       // 가입되지 않은 회원일 경우 자동으로 회원 가입
       const userInfo = {
         name: kakaoUserInfo.kakao_account.profile.nickname,
@@ -399,20 +448,20 @@ router.post('/login/kakao', async function(req, res, next) {
       item: user
     });
 
-  }catch(err){
+  } catch (err) {
     delete err.response?.request; // 너무 많은 내용이 있어서 제거함
     logger.error(err.response || err);
-    
-    if(err.response?.data?.error_code){ // 카카오 API에서 보낸 에러
+
+    if (err.response?.data?.error_code) { // 카카오 API에서 보낸 에러
       res.status(err.response.status).json({ ok: 0, error: err.response?.data });
-    }else{
+    } else {
       next(err);
     }
   }
 });
 
 // 인증 공급자 기반 로그인(구글, 깃허브 등 인증 공급자를 통한 자동 로그인 처리)
-router.post('/login/with', async function(req, res, next) {
+router.post('/login/with', async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '로그인 With ...'
@@ -469,27 +518,27 @@ router.post('/login/with', async function(req, res, next) {
       }
     }
   */
-  try{
+  try {
     const userModel = req.model.user;
     const providerAccountId = req.body.providerAccountId;
     const user = await userService.loginOAuth(userModel, req.body.providerAccountId);
 
-    if(providerAccountId && user){
+    if (providerAccountId && user) {
       res.json({
         ok: 1,
         item: user
       });
-    }else{
+    } else {
       res.status(404).json({ ok: 0, message: '지정한 회원을 찾을 수 없습니다.' });
     }
-   
-  }catch(err){
+
+  } catch (err) {
     next(err);
   }
 });
 
 // 지정한 사용자의 북마크 목록 조회
-router.get('/:_id/bookmarks', async function(req, res, next) {
+router.get('/:_id/bookmarks', async function (req, res, next) {
 
   /*
     #swagger.tags = ['회원']
@@ -526,21 +575,21 @@ router.get('/:_id/bookmarks', async function(req, res, next) {
     }
     
   */
- 
-  try{
+
+  try {
     const user_id = Number(req.params._id);
     const bookmarkModel = req.model.bookmark;
     const item = await bookmarkModel.findByUser(user_id);
     res.json({ ok: 1, item });
 
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 
 // 회원 조회(단일 속성)
-router.get('/:_id/*', /*jwtAuth.auth('user'),*/ async function(req, res, next) {
+router.get('/:_id/*', /*jwtAuth.auth('user'),*/ async function (req, res, next) {
   /*  
     #swagger.auto = false
 
@@ -595,29 +644,29 @@ router.get('/:_id/*', /*jwtAuth.auth('user'),*/ async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     // if(req.user.type === 'admin' || req.params._id == req.user._id){
-      logger.trace(req.params);
-      const attr = req.params[0].replaceAll('/', '.');
-      logger.log(attr);
-      const item = await userModel.findAttrById(Number(req.params._id), attr);
-      if(item){
-        res.json({ok: 1, item});
-      }else{
-        next(); // 404
-      }
-      
+    logger.trace(req.params);
+    const attr = req.params[0].replaceAll('/', '.');
+    logger.log(attr);
+    const item = await userModel.findAttrById(Number(req.params._id), attr);
+    if (item) {
+      res.json({ ok: 1, item });
+    } else {
+      next(); // 404
+    }
+
     // }else{
     //   next(); // 404
     // }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 회원 조회(모든 속성)
-router.get('/:_id', /*jwtAuth.auth('user'),*/ async function(req, res, next) {
+router.get('/:_id', /*jwtAuth.auth('user'),*/ async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '회원 정보 조회(모든 속성)'
@@ -666,27 +715,27 @@ router.get('/:_id', /*jwtAuth.auth('user'),*/ async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     // if(req.user.type === 'admin' || req.params._id == req.user._id){
-      const result = await userModel.findById(Number(req.params._id));
-      
-      if(result){
-        res.json({ok: 1, item: result});
-      }else{
-        next(); // 404
-      }      
+    const result = await userModel.findById(Number(req.params._id));
+
+    if (result) {
+      res.json({ ok: 1, item: result });
+    } else {
+      next(); // 404
+    }
     // }else{
     //   next(); // 404
     // }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 
 // 회원 정보 수정
-router.patch('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
+router.patch('/:_id', jwtAuth.auth('user'), async function (req, res, next) {
   /*
     #swagger.tags = ['회원']
     #swagger.summary  = '회원 정보 수정'
@@ -752,28 +801,28 @@ router.patch('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     logger.trace(req.body);
     const _id = Number(req.params._id);
-    if(req.user.type === 'admin' || _id === req.user._id){
-      if(req.user.type !== 'admin'){ // 관리자가 아니라면 회원 타입과 회원 승인 정보는 수정 못함
+    if (req.user.type === 'admin' || _id === req.user._id) {
+      if (req.user.type !== 'admin') { // 관리자가 아니라면 회원 타입과 회원 승인 정보는 수정 못함
         delete req.body.type;
         // delete (req.body.extra && req.body.extra.confirm);
-        if(req.body['extra.confirm'] === true){ // 일반 유저가 confirm 처리하지 못하도록
+        if (req.body['extra.confirm'] === true) { // 일반 유저가 confirm 처리하지 못하도록
           delete req.body['extra.confirm'];
         }
       }
       const updated = await userService.update(userModel, _id, req.body);
-      if(updated){
+      if (updated) {
         res.json({ ok: 1, item: updated });
-      }else{
+      } else {
         next();
       }
-    }else{
+    } else {
       next(); // 404
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -782,7 +831,7 @@ router.patch('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
 router.get('/', [
   query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
   query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['회원']
@@ -871,7 +920,7 @@ router.get('/', [
     }
   */
 
-  try{
+  try {
     const userModel = req.model.user;
     logger.trace(req.query);
 
@@ -885,27 +934,27 @@ router.get('/', [
     const address = req.query.address;
     const custom = req.query.custom;
 
-    if(_id){
+    if (_id) {
       search['_id'] = Number(_id);
     }
-    if(email){
+    if (email) {
       search['email'] = email;
     }
-    if(name){
+    if (name) {
       search['name'] = name;
     }
-    if(phone){
+    if (phone) {
       search['phone'] = phone;
     }
-    if(type){
+    if (type) {
       search['type'] = type;
     }
-    if(address){
+    if (address) {
       const regex = new RegExp(address, 'i');
       search['address'] = { '$regex': regex };
     }
 
-    if(custom){
+    if (custom) {
       search = { ...search, ...JSON.parse(custom) };
     }
 
@@ -920,7 +969,7 @@ router.get('/', [
 
     const result = await userModel.find({ search, sortBy, page, limit });
     res.json({ ok: 1, ...result });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
