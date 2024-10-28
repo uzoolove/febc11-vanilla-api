@@ -80,7 +80,78 @@ export const initData = async (clientId, nextSeq) => {
     // 장바구니
     cart: [],
     // 즐겨찾기/북마크
-    bookmark: [],
+    bookmark: [
+      {
+        _id: await nextSeq('bookmark'),
+        type: 'post',
+        user_id: 4,
+        target_id: 2,
+        user: {
+          _id: 4,
+          name: '제이지',
+          email: 'u1@gmail.com',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        memo: 'GPT,프롬프팅',
+        createdAt: getTime(-3, -60 * 60 * 2),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        type: 'post',
+        user_id: 4,
+        target_id: 1,
+        user: {
+          _id: 4,
+          name: '제이지',
+          email: 'u1@gmail.com',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        memo: '포트폴리오,노션',
+        createdAt: getTime(-1, -60 * 60 * 12),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        type: 'user',
+        user_id: 4,
+        target_id: 2,
+        user: {
+          _id: 4,
+          name: 'AI러 이채문',
+          email: 'w3@gmail.com',
+          image: `/files/${clientId}/user-apeach.webp`
+        },
+        memo: '인문학자',
+        createdAt: getTime(-3, -60 * 60 * 20),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        type: 'user',
+        user_id: 3,
+        target_id: 2,
+        user: {
+          _id: 3,
+          name: '자기반성',
+          email: 'w2@gmail.com',
+          image: `/files/${clientId}/user-jayg.webp`
+        },
+        memo: '마케팅 관련 좋은 글 자주씀',
+        createdAt: getTime(-3, -60 * 60 * 20),
+      },
+      {
+        _id: await nextSeq('bookmark'),
+        type: 'user',
+        user_id: 2,
+        target_id: 3,
+        user: {
+          _id: 2,
+          name: 'AB',
+          email: 'w1@gmail.com',
+          image: `/files/${clientId}/user-neo.webp`
+        },
+        memo: '공상가',
+        createdAt: getTime(-3, -60 * 60 * 20),
+      },
+    ],
     // QnA, 공지사항, 게시판
     post: [
       {
