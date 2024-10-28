@@ -306,17 +306,15 @@ class UserModel {
         }
       },
 
+      // user 속성을 최상위로 이동
+      { $replaceRoot: { newRoot: { $mergeObjects: ["$user", { postViews: "$postViews" }] } } },
+
       { $sort: sortBy },
       { $skip: skip },
     ];
-    if (limit > 0) { // aggregate에서 limit는 양수
+    if (limit > 0) { // aggregate에서 limit는 양수로 지정해야 함
       pipeline.push({ $limit: limit });
     }
-
-    // user 속성을 최상위로 이동
-    pipeline.push({
-      $replaceRoot: { newRoot: { $mergeObjects: ["$user", { postViews: "$postViews" }] } }
-    });
 
     pipeline.push({
       $project: {
