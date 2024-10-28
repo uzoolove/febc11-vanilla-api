@@ -1378,8 +1378,10 @@ const doc = {
             "phone": "01044445555",
             "address": "서울시 강남구 논현동 222",
             "type": "user",
-            "createdAt": "2024.03.22 11:10:45",
-            "updatedAt": "2024.03.31 23:40:45",
+            "loginType": "email",
+            "image": "/files/00-openmarket/user-jayg.webp",
+            "createdAt": "2024.10.08 07:42:03",
+            "updatedAt": "2024.10.17 20:12:03",
             "extra": {
               "birthday": "11-30",
               "membershipClass": "MC02",
@@ -1396,7 +1398,12 @@ const doc = {
                 }
               ]
             },
-          }
+            "posts": 2,
+            "bookmarkedBy": {
+              "users": 1
+            },
+            "postViews": 55
+          },
         ],
         "pagination": {
           "page": 1,

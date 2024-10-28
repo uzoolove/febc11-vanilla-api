@@ -313,16 +313,23 @@ class UserModel {
       pipeline.push({ $limit: limit });
     }
 
+    // user 속성을 최상위로 이동
+    pipeline.push({
+      $replaceRoot: { newRoot: { $mergeObjects: ["$user", { postViews: "$postViews" }] } }
+    });
+
     pipeline.push({
       $project: {
-        'user.password': 0,
-        'user.refreshToken': 0,
-        'user.private': 0,
-        'user.postItems': 0,
-        'user.bookmark.postItems': 0,
-        'user.bookmarkedBy.userItems': 0,
+        'password': 0,
+        'refreshToken': 0,
+        'private': 0,
+        'postItems': 0,
+        'bookmark.postItems': 0,
+        'bookmarkedBy.userItems': 0,
       }
     });
+
+
 
     const list = await this.db.user.aggregate(pipeline).toArray();
 
