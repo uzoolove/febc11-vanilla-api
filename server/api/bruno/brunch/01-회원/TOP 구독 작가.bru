@@ -5,11 +5,12 @@ meta {
 }
 
 get {
-  url: {{url}}/users?sort={"bookmarkedBy.users": -1}
+  url: {{url}}/users?sort={"bookmarkedBy.users": -1}&limit=10
   body: none
   auth: none
 }
 
 params:query {
   sort: {"bookmarkedBy.users": -1}
+  limit: 10
 }
