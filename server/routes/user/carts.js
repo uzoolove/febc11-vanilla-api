@@ -1,9 +1,8 @@
 import express from 'express';
-import { query, body } from 'express-validator';
+import { body } from 'express-validator';
 import createError from 'http-errors';
 import _ from 'lodash';
 
-import logger from '#utils/logger.js';
 import jwtAuth from '#middlewares/jwtAuth.js';
 import validator from '#middlewares/validator.js';
 
@@ -14,7 +13,7 @@ router.post('/local', [
   body('products').isArray().withMessage('상품 목록은 배열로 전달해야 합니다.'),
   body('products.*._id').isInt().withMessage('상품 id는 정수만 입력 가능합니다.'),
   body('products.*.quantity').isInt().withMessage('상품 수량은 정수만 입력 가능합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -51,12 +50,12 @@ router.post('/local', [
 
   */
   const cartModel = req.model.cart;
-  try{
+  try {
     const item = await cartModel.findLocalCart(req.body);
     const cost = item.cost;
     delete item.cost;
     res.json({ ok: 1, item, cost });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -65,7 +64,7 @@ router.post('/local', [
 router.post('/', jwtAuth.auth('user'), [
   body('product_id').isInt().withMessage('상품 id는 정수만 입력 가능합니다.'),
   body('quantity').isInt().withMessage('상품 수량은 정수만 입력 가능합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -77,7 +76,7 @@ router.post('/', jwtAuth.auth('user'), [
     }]
 
     #swagger.requestBody = {
-      description: "장바구니에 추가할 상품 정보가 저장된 객체입니다.<br>다음과 같은 필수 정보를 포함해야 합니다.<br>product_id: 상품 id<br>quantity: 구매 수량",
+      description: "장바구니에 추가할 상품 정보가 저장된 객체입니다.<br>다음과 같은 필수 정보를 포함해야 합니다.<br>product_id: 상품 id<br>quantity: 구매 수량<br>다음은 선택 사항입니다.<br>size: 사이즈",
       required: true,
       content: {
         "application/json": {
@@ -121,17 +120,17 @@ router.post('/', jwtAuth.auth('user'), [
   */
 
   const cartModel = req.model.cart;
-  try{
+  try {
     req.body.user_id = req.user._id;
     const item = await cartModel.create(req.body);
-    res.status(201).json({ok: 1, item});
-  }catch(err){
+    res.status(201).json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
 
 // 장바구니 목록 조회(로그인 상태)
-router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
+router.get('/', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -162,13 +161,13 @@ router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
     
   */
   const cartModel = req.model.cart;
-  try{
+  try {
     const user_id = req.user._id;
     const item = await cartModel.findByUser(user_id, req.body.discount);
     const cost = item.cost;
     delete item.cost;
     res.json({ ok: 1, item, cost });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -176,7 +175,7 @@ router.get('/', jwtAuth.auth('user'), async function(req, res, next) {
 // 장바구니 상품 수량 수정
 router.patch('/:_id', jwtAuth.auth('user'), [
   body('quantity').isInt().withMessage('상품 수량은 정수만 입력 가능합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -207,7 +206,7 @@ router.patch('/:_id', jwtAuth.auth('user'), [
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/cartUpdateRes" },
+          schema: { $ref: "#/components/schemas/cartListLoginRes" }
         }
       }
     }
@@ -238,23 +237,25 @@ router.patch('/:_id', jwtAuth.auth('user'), [
     
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
     const _id = Number(req.params._id);
     const cart = await cartModel.findById(_id);
-    if(req.user.type === 'admin' || cart?.user_id == req.user._id){
-      const updated = await cartModel.update(_id, req.body.quantity);
-      res.json({ ok: 1, item: updated });
-    }else{
+    if (req.user.type === 'admin' || cart?.user_id == req.user._id) {
+      const item = await cartModel.update(req.user._id, _id, req.body.quantity);
+      const cost = item.cost;
+      delete item.cost;
+      res.json({ ok: 1, item, cost });
+    } else {
       next(); // 404
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 장바구니 비우기
-router.delete('/cleanup', jwtAuth.auth('user'), async function(req, res, next) {
+router.delete('/cleanup', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -291,17 +292,17 @@ router.delete('/cleanup', jwtAuth.auth('user'), async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
-    const result = await cartModel.cleanup(req.user._id);
+    await cartModel.cleanup(req.user._id);
     res.json({ ok: 1 });
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
 
 // 장바구니 상품 삭제(한건)
-router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
+router.delete('/:_id', jwtAuth.auth('user'), async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -323,7 +324,7 @@ router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/simpleOK" },
+          schema: { $ref: "#/components/schemas/cartListLoginRes" }
         }
       }
     }
@@ -353,17 +354,19 @@ router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
     }
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
     const _id = Number(req.params._id);
     const cart = await cartModel.findById(_id);
-    if(req.user.type === 'admin' || cart?.user_id == req.user._id){
-      await cartModel.delete(_id);
-      res.json({ ok: 1 });
-    }else{
+    if (req.user.type === 'admin' || cart?.user_id == req.user._id) {
+      const item = await cartModel.delete(req.user._id, _id);
+      const cost = item.cost;
+      delete item.cost;
+      res.json({ ok: 1, item, cost });
+    } else {
       next();
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -371,7 +374,7 @@ router.delete('/:_id', jwtAuth.auth('user'), async function(req, res, next) {
 // 장바구니 상품 삭제(여러건)
 router.delete('/', jwtAuth.auth('user'), [
   body('carts').isArray().withMessage('상품 목록은 배열로 전달해야 합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -395,7 +398,7 @@ router.delete('/', jwtAuth.auth('user'), [
       description: '성공',
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/simpleOK" }
+          schema: { $ref: "#/components/schemas/cartListLoginRes" }
         }
       }
     }
@@ -425,17 +428,19 @@ router.delete('/', jwtAuth.auth('user'), [
     }
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
     const myCarts = await cartModel.findByUser(req.user._id);
     const isMine = _.every(req.body.carts, _id => _.some(myCarts, cart => _.isEqual(cart._id, _id)));
-    if(req.user.type === 'admin' || isMine){
-      await cartModel.deleteMany(req.body.carts);
-      res.json({ ok: 1 });
-    }else{
+    if (req.user.type === 'admin' || isMine) {
+      const item = await cartModel.deleteMany(req.user._id, req.body.carts);
+      const cost = item.cost;
+      delete item.cost;
+      res.json({ ok: 1, item, cost });
+    } else {
       next(createError(422, `본인의 장바구니 상품만 삭제 가능합니다.`));
     }
-  }catch(err){
+  } catch (err) {
     next(err);
   }
 });
@@ -445,7 +450,7 @@ router.put('/replace', jwtAuth.auth('user'), [
   body('products').isArray().withMessage('상품 목록은 배열로 전달해야 합니다.'),
   body('products.*._id').isInt().withMessage('상품 id는 정수만 입력 가능합니다.'),
   body('products.*.quantity').isInt().withMessage('상품 수량은 정수만 입력 가능합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -499,12 +504,12 @@ router.put('/replace', jwtAuth.auth('user'), [
     }
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
     await cartModel.cleanup(req.user._id);
     const item = await cartModel.add(req.user._id, req.body.products);
-    res.json({ ok: 1, item});
-  }catch(err){
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });
@@ -514,7 +519,7 @@ router.put('/', jwtAuth.auth('user'), [
   body('products').isArray().withMessage('상품 목록은 배열로 전달해야 합니다.'),
   body('products.*._id').isInt().withMessage('상품 id는 정수만 입력 가능합니다.'),
   body('products.*.quantity').isInt().withMessage('상품 수량은 정수만 입력 가능합니다.'),
-], validator.checkResult, async function(req, res, next) {
+], validator.checkResult, async function (req, res, next) {
 
   /*
     #swagger.tags = ['장바구니']
@@ -568,11 +573,11 @@ router.put('/', jwtAuth.auth('user'), [
     }
   */
 
-  try{
+  try {
     const cartModel = req.model.cart;
     const item = await cartModel.add(req.user._id, req.body.products);
-    res.json({ ok: 1, item});
-  }catch(err){
+    res.json({ ok: 1, item });
+  } catch (err) {
     next(err);
   }
 });

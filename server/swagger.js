@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
   info: {
-    version: '1.2.0',
+    version: '2.0.0',
     title: '오픈마켓 API',
     description: `오픈마켓 API Server입니다.<br>
       <a href="/">버전별 변경사항 확인</a>`,
@@ -1069,15 +1069,6 @@ const doc = {
 
       cartUpdate: {
         "quantity": 2
-      },
-
-      cartUpdateRes: {
-        "ok": 1,
-        "item": {
-          "_id": 2,
-          "quantity": 2,
-          "updatedAt": "2024.04.08 10:10:41"
-        }
       },
 
       cartDeleteBody: {

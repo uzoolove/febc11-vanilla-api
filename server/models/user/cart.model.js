@@ -136,33 +136,38 @@ class CartModel {
   }
 
   // 장바구니 상품 수량 수정
-  async update(_id, quantity) {
+  async update(user_id, _id, quantity) {
     logger.trace(arguments);
 
     const updatedAt = moment().tz('Asia/Seoul').format('YYYY.MM.DD HH:mm:ss');
 
     const result = await this.db.cart.updateOne({ _id }, { $set: { quantity, updatedAt } });
     logger.debug(result);
-    const item = { _id, quantity, updatedAt };
-    return item;
+    // const item = { _id, quantity, updatedAt };
+    // return item;
+    const list = await this.findByUser(user_id);
+    return list;
   }
 
   // 장바구니 상품 한건 삭제
-  async delete(_id) {
+  async delete(user_id, _id) {
     logger.trace(arguments);
 
-    const result = await this.db.cart.deleteOne({ _id });
-    logger.debug(result);
-    return result;
+    await this.db.cart.deleteOne({ _id });
+    // return result;
+    const list = await this.findByUser(user_id);
+    return list;
   }
 
   // 장바구니 상품 여러건 삭제
-  async deleteMany(cartIdList) {
+  async deleteMany(user_id, cartIdList) {
     logger.trace(arguments);
 
-    const result = await this.db.cart.deleteMany({ _id: { $in: cartIdList } });
-    logger.debug(result);
-    return result;
+    await this.db.cart.deleteMany({ _id: { $in: cartIdList } });
+    // return result;
+
+    const list = await this.findByUser(user_id);
+    return list;
   }
 
   // 장바구니 비우기
