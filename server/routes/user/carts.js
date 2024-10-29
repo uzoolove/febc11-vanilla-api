@@ -76,7 +76,7 @@ router.post('/', jwtAuth.auth('user'), [
     }]
 
     #swagger.requestBody = {
-      description: "장바구니에 추가할 상품 정보가 저장된 객체입니다.<br>다음과 같은 필수 정보를 포함해야 합니다.<br>product_id: 상품 id<br>quantity: 구매 수량<br>다음은 선택 사항입니다.<br>size: 사이즈",
+      description: "장바구니에 추가할 상품 정보가 저장된 객체입니다.<br>다음과 같은 필수 정보를 포함해야 합니다.<br>product_id: 상품 id<br>quantity: 구매 수량<br><br>다음은 선택 사항입니다.<br>size: 사이즈, 꼭 사이즈가 아니더라도 상품의 추가 옵션을 지정할 수 있습니다.",
       required: true,
       content: {
         "application/json": {
