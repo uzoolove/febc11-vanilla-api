@@ -15,14 +15,15 @@ class CartModel {
   // 장바구니 등록
   async create(cartInfo) {
     logger.trace(arguments);
+    const product_id = Number(cartInfo.product_id);
     const updatedAt = moment().tz('Asia/Seoul').format('YYYY.MM.DD HH:mm:ss');
 
     const beforeCart = await this.findByUser(cartInfo.user_id);
     let sameProduct;
     if (cartInfo.size) {
-      sameProduct = _.find(beforeCart, { product_id: cartInfo.product_id, size: cartInfo.size });
+      sameProduct = _.find(beforeCart, { product_id, size: cartInfo.size });
     } else {
-      sameProduct = _.find(beforeCart, { product_id: cartInfo.product_id });
+      sameProduct = _.find(beforeCart, { product_id });
     }
 
     // 이미 등록된 상품일 경우 수량을 증가시킨다.
@@ -34,7 +35,10 @@ class CartModel {
     } else {
       cartInfo._id = await this.db.nextSeq('cart');
       cartInfo.updatedAt = cartInfo.createdAt = updatedAt;
-      const product = await this.db.product.findOne({ _id: cartInfo.product_id }, { name: 1, price: 1, mainImages: 1 });
+      const product = await this.db.product.findOne({ _id: product_id }, { name: 1, price: 1, mainImages: 1 });
+      if (!product) {
+        throw createError(422, `product_id: ${product_id}인 상품이 존재하지 않습니다.`);
+      }
       product.image = product.mainImages[0];
       cartInfo.product = product;
       if (!cartInfo.dryRun) {
