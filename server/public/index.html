@@ -29,12 +29,47 @@
   <h1>FrontEnd BootCamp 11기 API Server</h1>
   <p>API 문서: <a id="apilink"></a></p>
   <div>
-    <h2>최신 버전: <span>v2.0.0</span></h2>
+    <h2>최신 버전: <span>v2.1.0</span></h2>
   </div>
 
 
   <div>
     <h2>변경 사항</h2>
+
+    <h3 id="v2.1.0">v2.1.0 - 2024.10.30</h3>
+    <ul>
+      <li>[로그인] accessToken 만료기간 직접 설정 가능
+        <ul>
+          <li>토큰 만료 테스트를 위해서, 로그인시 만료 기간 설정 기능 추가</li>
+          <li>expiresIn 쿼리스트링에 만료기간 지정(다음 예시 참고)
+            <ul>
+              <li>1d: 1일</li>
+              <li>2h: 2시간</li>
+              <li>5m: 5분</li>
+              <li>10s: 10초</li>
+            </ul>
+          </li>
+          <li>브루노 테스트 시 accessToken을 환경변수로 추가하는 기존 스크립트 수정 필요
+            <ul>
+              <li>설정: <a href="https://github.com/uzoolove/febc11-vanilla-ins/blob/main/docs/14.api.md#%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%B6%94%EA%B0%80">로그인 스크립트 추가</a></li>
+            </ul>
+          </li>
+          <li>API 문서: <a href="/apidocs/#/%ED%9A%8C%EC%9B%90/post_users_login">로그인</a></li>
+          <li>API 테스트: <a
+              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/brunch/01-%ED%9A%8C%EC%9B%90/%EB%A1%9C%EA%B7%B8%EC%9D%B8(%EB%A7%8C%EB%A3%8C%EC%8B%9C%EA%B0%84%201%EB%B6%84).bru">로그인(만료시간 1분)</a></li>
+        </ul>
+      </li>
+      <li>[회원] 회원 목록 조회시 북마크 된 횟수 응답 데이터에 추가
+        <ul>
+          <li>브런치 스토리 메인페이지의 [TOP 구독 작가] 기능에 사용하기 위한 API</li>
+          <li>회원 정보의 bookmarkedBy.users 속성에 북마크 된 횟수가 추가됨</li>
+          <li>API 문서: <a href="/apidocs/#/%ED%9A%8C%EC%9B%90/get_users_">회원 목록 조회</a></li>
+          <li>API 테스트: <a
+              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/brunch/01-%ED%9A%8C%EC%9B%90/TOP%20%EA%B5%AC%EB%8F%85%20%EC%9E%91%EA%B0%80.bru">TOP
+              구독 작가</a></li>
+        </ul>
+      </li>
+    </ul>
 
     <h3 id="v2.0.0">v2.0.0 - 2024.10.29</h3>
     <ul>
