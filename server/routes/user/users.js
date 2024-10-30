@@ -261,6 +261,13 @@ router.post('/login', [
     응답 데이터에 token 속성으로 JWT 기반의 Access Token과 Refresh Token을 반환합니다.<br>
     이후 로그인이 필요한 모든 요청에는 Authorization 헤더에 Bearer 방식의 Access Token을 보내야 합니다.`
 
+    #swagger.parameters['expiresIn'] = {
+      description: "(선택) accessToken 만료 기간. 기본은 1d(1일)이지만 토큰 만료 테스트를 위해서 직접 만료기간을 지정할 수 있도록 추가했습니다.<br>1d: 1일, 2h: 2시간, 5m: 5분, 10s: 10초",
+      in: 'query',
+      type: 'string',
+      example: '1m'
+    }
+
     #swagger.requestBody = {
       description: "로그인 정보",
       required: true,
@@ -310,7 +317,8 @@ router.post('/login', [
 
   try {
     const userModel = req.model.user;
-    const user = await userService.login(userModel, req.body);
+
+    const user = await userService.login(userModel, req.body, req.query.expiresIn);
     if (user.type === 'seller' && user.extra?.confirm === false) {
       res.status(403).json({ ok: 0, message: '관리자의 승인이 필요합니다.' });
     } else {

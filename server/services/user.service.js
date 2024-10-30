@@ -47,14 +47,14 @@ const userService = {
   },
 
   // 로그인
-  async login(userModel, { email, password }){
+  async login(userModel, { email, password }, expiresIn){
     const user = await userModel.findBy({ email });
     logger.log(user);
     if(user){
       const isSame = await bcrypt.compare(password, user.password);
       if(isSame){
         delete user.password;
-        return await this.setToken(userModel, user);
+        return await this.setToken(userModel, user, expiresIn);
       }
     }
     // 401은 토큰 인증 오류에 사용하므로 로그인 실패는 403(권한없음)으로 사용
@@ -84,8 +84,8 @@ const userService = {
   },
 
   // 로그인 성공한 회원 정보에 토큰 부여
-  async setToken(userModel, user){
-    const token = await authService.sign({ _id: user._id, type: user.type, name: user.name, email: user.email, image: user.image, loginType: user.loginType });
+  async setToken(userModel, user, expiresIn){
+    const token = await authService.sign({ _id: user._id, type: user.type, name: user.name, email: user.email, image: user.image, loginType: user.loginType }, expiresIn);
     logger.log('token', token);
     await userModel.updateRefreshToken(user._id, token.refreshToken);
     user.token = token;

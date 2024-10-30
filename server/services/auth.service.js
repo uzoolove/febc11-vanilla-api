@@ -6,12 +6,17 @@ import { jwt as JWTConfig } from '../config/index.js';
 
 const authService = {
   // JWT 토큰 생성
-  async sign(payload) {
+  async sign(payload, expiresIn) {
+    const accessOptions = { ...JWTConfig.access.options };
+    if(expiresIn){
+      accessOptions.expiresIn = expiresIn;
+    }
+    
     const result = {
       accessToken: jwt.sign(
         payload,
         JWTConfig.access.secretKey,
-        JWTConfig.access.options,
+        accessOptions,
       ),
       refreshToken: jwt.sign(
         {},
