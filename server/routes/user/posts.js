@@ -819,7 +819,8 @@ router.get('/:_id/replies', [
 });
 
 // 댓글 등록
-router.post('/:_id/replies', jwtAuth.auth('user', true), [
+// router.post('/:_id/replies', jwtAuth.auth('user', true), [ // 익명 허용
+router.post('/:_id/replies', jwtAuth.auth('user'), [ // 익명 허용 안함
   body('content').trim().isLength({ min: 2 }).withMessage('내용은 2글자 이상 입력해야 합니다.'),
 ], validator.checkResult, async function (req, res, next) {
 
