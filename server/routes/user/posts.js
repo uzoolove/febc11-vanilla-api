@@ -7,8 +7,8 @@ import validator from '#middlewares/validator.js';
 const router = express.Router();
 
 // 게시글 등록
-// router.post('/', jwtAuth.auth('user', true), [ // 익명 가능
-router.post('/', jwtAuth.auth('user'), [ // 로그인 사용자만 가능
+router.post('/', jwtAuth.auth('user', true), [ // 익명 가능
+// router.post('/', jwtAuth.auth('user'), [ // 로그인 사용자만 가능
   body('title').optional().trim().isLength({ min: 2 }).withMessage('제목은 2글자 이상 입력해야 합니다.'),
   body('content').optional().trim().isLength({ min: 2 }).withMessage('내용은 2글자 이상 입력해야 합니다.'),
   body('tag').optional().trim().isLength({ min: 2 }).withMessage('태그는 2글자 이상 입력해야 합니다.'),
@@ -819,8 +819,8 @@ router.get('/:_id/replies', [
 });
 
 // 댓글 등록
-// router.post('/:_id/replies', jwtAuth.auth('user', true), [ // 익명 허용
-router.post('/:_id/replies', jwtAuth.auth('user'), [ // 익명 허용 안함
+router.post('/:_id/replies', jwtAuth.auth('user', true), [ // 익명 허용
+// router.post('/:_id/replies', jwtAuth.auth('user'), [ // 익명 허용 안함
   body('content').trim().isLength({ min: 2 }).withMessage('내용은 2글자 이상 입력해야 합니다.'),
 ], validator.checkResult, async function (req, res, next) {
 
