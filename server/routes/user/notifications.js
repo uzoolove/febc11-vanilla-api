@@ -25,7 +25,7 @@ router.post('/', jwtAuth.auth('user'), [
         target_id: (필수) 대상 회원 ID<br>
         content: (필수) 알림 메세지<br>
         type: (선택) 알림 종류를 구분하는 값<br>
-        channel: (선택) 알림을 전달하는 방법, none, websocket, email, sms, slack, discode ... 등의 방법을 지정(추후 지원)<br>
+        channel: (선택) 알림을 전달하는 방법, none, websocket, email, sms, slack, discord ... 등의 방법을 지정(추후 지원)<br>
         extra: (선택) 추가 데이터, 추가하고 싶은 아무 속성이나 지정`,
       required: true,
       content: {
