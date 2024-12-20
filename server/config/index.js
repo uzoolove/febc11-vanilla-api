@@ -11,7 +11,7 @@ if (process.env.NODE_ENV) {
 
 export const db = {
   url: process.env.DB_URL,
-  clientIds: ['00-sample', '00-board', '00-brunch', '00-nike', '00-toyzrus', '00-openmarket', 'vanilla00', 'vanilla01', 'vanilla02', 'vanilla03', 'vanilla04', 'vanilla05', 'vanilla06', 'vanilla07', 'vanilla08', 'vanilla09', 'vanilla10'],
+  clientIds: ['00-sample', '00-board', '00-brunch', '00-nike', '00-toyzrus', '00-openmarket', 'vanilla00', 'vanilla01', 'vanilla02', 'vanilla03', 'vanilla04', 'vanilla05', 'vanilla06', 'vanilla07', 'vanilla08', 'vanilla09', 'vanilla10', 'final01', 'final02', 'final03', 'final04', 'final05', 'final06', 'final07', 'final08', 'final09', 'final10'],
 };
 
 export const jwt = {
