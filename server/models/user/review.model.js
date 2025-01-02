@@ -143,6 +143,7 @@ class ReviewModel {
           },
           'review.rating': '$review.rating',
           'review.content': '$review.content',
+          'review.image': '$user.image',
           'review.createdAt': '$review.createdAt',
         }
       },
