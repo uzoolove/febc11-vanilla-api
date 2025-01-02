@@ -19,7 +19,8 @@ const file = (req, file) => {
   return {
     bucketName: 'upload',
     filename,
-    org: file.originalname
+    org: file.originalname,
+    contentType: file.mimetype,
   };
 }
 
@@ -121,7 +122,7 @@ router.post('/', multerUpload, handleError, async function(req, res, next) {
     result.item = req.files.map(file => ({
       originalname: file.originalname,
       name: file.filename,
-      path: `/files/${req.clientId}/${file.filename}`
+      path: `/files/${req.clientId}/${file.filename}`,
     }));
 
     res.status(201).json(result);
@@ -258,9 +259,11 @@ const sendFile = (req, res, next, mode='view') => {
         bucketName: 'upload',
       });
       let downloadStream = fileBucket.openDownloadStreamByName(req.params.fileName);
-  
-      downloadStream.on('open', function (data) {
-        logger.debug('open', data);
+
+      downloadStream.on('file', (file) => {
+        if (file?.contentType) {
+          res.setHeader('Content-Type', file.contentType); // MIME 타입 설정
+        }
       });
   
       downloadStream.on('data', function (data) {
