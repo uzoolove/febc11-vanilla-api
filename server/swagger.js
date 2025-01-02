@@ -914,9 +914,10 @@ const doc = {
             "replies": [
               {
                 "_id": 1,
-                "user_name": "데**",
+                "user_name": "제**",
                 "rating": 5,
                 "content": "아이가 좋아해요.",
+                "image": "/files/user-jayg.webp",
                 "createdAt": "2024.04.02 23:46:27"
               },
               {
@@ -924,6 +925,7 @@ const doc = {
                 "user_name": "네*",
                 "rating": 4,
                 "content": "배송이 좀 느려요.",
+                "image": "/files/user-neo.webp",
                 "createdAt": "2024.04.04 10:46:27"
               }
             ]
