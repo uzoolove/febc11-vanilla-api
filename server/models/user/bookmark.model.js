@@ -60,6 +60,7 @@ class BookmarkModel {
           [`${query.type}.quantity`]: `$${query.type}.quantity`,
           [`${query.type}.buyQuantity`]: `$${query.type}.buyQuantity`,
           [`${query.type}.mainImages`]: `$${query.type}.mainImages`,
+          [`${query.type}.extra`]: `$${query.type}.extra`,
 
           // user
           [`${query.type}.email`]: `$${query.type}.email`,
