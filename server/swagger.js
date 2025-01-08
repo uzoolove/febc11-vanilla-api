@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
   info: {
-    version: '2.1.2',
+    version: '3.0.0',
     title: '오픈마켓 API',
     description: `오픈마켓 API Server입니다.<br>
       <a href="/">버전별 변경사항 확인</a>`,
@@ -914,18 +914,24 @@ const doc = {
             "replies": [
               {
                 "_id": 1,
-                "user_name": "제**",
+                "user": {
+                  "_id": 4,
+                  "name": "제**",
+                  "image": "/files/user-jayg.webp"
+                },
                 "rating": 5,
                 "content": "아이가 좋아해요.",
-                "image": "/files/user-jayg.webp",
                 "createdAt": "2024.04.02 23:46:27"
               },
               {
                 "_id": 2,
-                "user_name": "네*",
+                "user": {
+                  "_id": 2,
+                  "name": "네**",
+                  "image": "/files/user-neo.webp"
+                },
                 "rating": 4,
                 "content": "배송이 좀 느려요.",
-                "image": "/files/user-neo.webp",
                 "createdAt": "2024.04.04 10:46:27"
               }
             ]

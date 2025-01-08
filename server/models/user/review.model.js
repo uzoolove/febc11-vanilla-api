@@ -127,7 +127,12 @@ class ReviewModel {
           'image': { $arrayElemAt: ['$mainImages', 0] },
           'review._id': '$review._id',
           'review.extra': '$review.extra',
-          'review.user_name': {
+          'review.rating': '$review.rating',
+          'review.content': '$review.content',
+          'review.createdAt': '$review.createdAt',
+          'review.user._id': '$user._id',
+          'review.user.image': '$user.image',
+          'review.user.name': {
             $concat: [
               { $substrCP: ['$user.name', 0, 1] }, // 첫 번째 문자 추출
               {
@@ -141,10 +146,6 @@ class ReviewModel {
               }
             ]
           },
-          'review.rating': '$review.rating',
-          'review.content': '$review.content',
-          'review.image': '$user.image',
-          'review.createdAt': '$review.createdAt',
         }
       },
       {
