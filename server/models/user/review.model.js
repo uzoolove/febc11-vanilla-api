@@ -94,6 +94,28 @@ class ReviewModel {
     return item;
   }
 
+  // 후기 수정
+  async update(_id, review){
+    logger.trace(arguments);
+    review.updatedAt = moment().tz('Asia/Seoul').format('YYYY.MM.DD HH:mm:ss');
+    if(!review.dryRun){
+      await this.db.review.updateOne(
+        { _id },
+        { $set: review }
+      );
+    }
+    return { _id, ...review };
+  }
+
+  // 후기 삭제
+  async delete(_id){
+    logger.trace(arguments);
+
+    const result = await this.db.review.deleteOne({ _id });
+    logger.debug(result);
+    return result;
+  }
+
   // 판매자 후기 목록 조회
   async findBySeller(seller_id) {
     logger.trace(arguments);
@@ -163,6 +185,8 @@ class ReviewModel {
     logger.debug(list);
     return list;
   }
+
+  
 }
 
 export default ReviewModel;

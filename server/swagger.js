@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
   info: {
-    version: '3.0.0',
+    version: '3.1.0',
     title: '오픈마켓 API',
     description: `오픈마켓 API Server입니다.<br>
       <a href="/">버전별 변경사항 확인</a>`,
@@ -820,7 +820,7 @@ const doc = {
         }
       },
 
-      orderReplyCreate: {
+      orderReviewCreate: {
         "order_id": 1,
         "product_id": 3,
         "rating": 3,
@@ -830,7 +830,7 @@ const doc = {
         }
       },
 
-      orderReplyCreateRes: {
+      orderReviewCreateRes: {
         "ok": 1,
         "item": {
           "order_id": 1,
@@ -2666,6 +2666,27 @@ const doc = {
             "image": "sample-hulk.png"
           },
           "updatedAt": "2024.04.12 09:28:41"
+        }
+      },
+
+      updateReviewBody: {
+        "rating": 5,
+        "content": "하루만에 고장났지만 다시 보내줬어요",
+        "extra": {
+          "title": "고객응대가 좋아요"
+        }
+      },
+
+      updateReviewRes: {
+        "ok": 1,
+        "item": {
+          "_id": 3,
+          "rating": 5,
+          "content": "하루만에 고장났지만 다시 보내줬어요",
+          "extra": {
+            "title": "고객응대가 좋아요"
+          },
+          "updatedAt": "2025.01.09 17:54:13"
         }
       },
 

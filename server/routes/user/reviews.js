@@ -343,6 +343,160 @@ router.get('/seller/:seller_id', async function (req, res, next) {
   }
 });
 
+// 구매 후기 수정
+router.patch('/:_id', jwtAuth.auth('user'), [
+  body('rating').optional().isInt().withMessage('후기 점수는 정수만 입력 가능합니다.'),
+  body('content').trim().isLength({ min: 2 }).withMessage('2글자 이상 입력해야 합니다.'),
+], validator.checkResult, async function (req, res, next) {
 
+  /*
+    #swagger.tags = ['구매 후기']
+    #swagger.summary  = '구매 후기 수정'
+    #swagger.description = '구매 후기를 수정한다.'
+    
+    #swagger.security = [{
+      "Access Token": []
+    }]
+    
+    #swagger.parameters['_id'] = {
+      description: "구매 후기 id",
+      in: 'path',
+      type: 'number',
+      example: 1
+    }
+
+    #swagger.requestBody = {
+      description: "수정할 구매 후기 정보",
+      required: true,
+      content: {
+        "application/json": {
+          examples: {
+            "샘플": { $ref: "#/components/examples/updateReviewBody" },
+          }
+        }
+      }
+    }
+    #swagger.responses[200] = {
+      description: '성공',
+      content: {
+        "application/json": {
+          examples: {
+            "샘플": { $ref: "#/components/examples/updateReviewRes" },
+          }
+        }
+      }
+    },
+    #swagger.responses[401] = {
+      description: '인증 실패',
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/error401" }
+        }
+      }
+    },
+    #swagger.responses[404] = {
+      description: '구매 후기가 존재하지 않거나 접근 권한이 없음',
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/error404" }
+        }
+      }
+    },
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      content: {
+        "application/json": {
+          schema: { $ref: '#/components/schemas/error500' }
+        }
+      }
+    }
+  */
+
+  try {
+    const reviewModel = req.model.review;
+    const _id = Number(req.params._id);
+    const review = await reviewModel.findById(_id);
+
+    if (review && (req.user.type === 'admin' || review.user._id == req.user._id)) {
+      const updated = await reviewModel.update(_id, req.body);
+      res.json({ ok: 1, item: updated });
+    } else {
+      next();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// 구매 후기 삭제
+router.delete('/:_id', jwtAuth.auth('user'), async function (req, res, next) {
+
+  /*
+    #swagger.tags = ['구매 후기']
+    #swagger.summary  = '구매 후기 삭제'
+    #swagger.description = '구매 후기를 삭제합니다.'
+    
+    #swagger.security = [{
+      "Access Token": []
+    }]
+
+    #swagger.parameters['_id'] = {
+      description: '구매 후기 id',
+      in: 'path',
+      required: true,
+      type: 'number',
+      example: '2'
+    }
+
+    #swagger.responses[200] = {
+      description: '성공',
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/simpleOK" }
+          }
+        }
+      }
+    }
+    #swagger.responses[401] = {
+      description: '인증 실패',
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/error401" }
+        }
+      }
+    }
+    #swagger.responses[404] = {
+      description: '구매 후기가 존재하지 않거나 접근 권한이 없음',
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/error404" }
+        }
+      }
+    }
+    #swagger.responses[500] = {
+      description: '서버 에러',
+      content: {
+        "application/json": {
+          schema: { $ref: '#/components/schemas/error500' }
+        }
+      }
+    }
+    
+  */
+
+  try {
+    const reviewModel = req.model.review;
+    const _id = Number(req.params._id);
+    const review = await reviewModel.findById(_id);
+    if (review && (req.user.type === 'admin' || review?.user._id == req.user._id)) {
+      await reviewModel.delete(_id);
+      res.json({ ok: 1 });
+    } else {
+      next();
+    }
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;

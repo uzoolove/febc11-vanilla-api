@@ -16,25 +16,53 @@
     }
   </style>
   <script type="text/javascript">
+    const api_url = location.href + 'apidocs';
+    const github_url = 'https://github.com/uzoolove/febc11-vanilla-api';
+    const bruno_url = github_url + '/blob/main/server/api/bruno/openmarket';
+
     window.addEventListener('DOMContentLoaded', () => {
-      const url = location.href + 'apidocs';
-      const apilink = document.querySelector('#apilink');
-      apilink.setAttribute('href', url);
-      apilink.innerHTML = url;
+      console.log(document.body.innerHTML);
+      document.body.innerHTML = document.body.innerHTML.replace(/<%= api_url %>|&lt;%= api_url %&gt;/g, api_url)
+                                                        .replace(/<%= bruno_url %>|&lt;%= bruno_url %&gt;/g, bruno_url);
     });
+    
+    // window.addEventListener('DOMContentLoaded', () => {
+    //   const url = location.href + 'apidocs';
+    //   const apilink = document.querySelector('#apilink');
+    //   apilink.setAttribute('href', url);
+    //   apilink.innerHTML = url;
+    // });
   </script>
 </head>
 
 <body>
   <h1>FrontEnd BootCamp 11기 API Server</h1>
-  <p>API 문서: <a id="apilink"></a></p>
+  <p>API 문서: <a target="_blank" href="<%= api_url %>"><%= api_url %></a></p>
   <div>
-    <h2>최신 버전: <span>v3.0.0</span></h2>
+    <h2>최신 버전: <span>v3.1.0</span></h2>
   </div>
 
 
   <div>
     <h2>변경 사항</h2>
+
+    <h3 id="v3.1.0">v3.1.0 - 2025.01.10</h3>
+    <ul>
+      <li>[구매 후기] 구매 후기 수정 기능 추가
+        <ul>
+          <li>API 문서: <a href="/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/patch_replies___id_">구매 후기 수정</a></li>
+          <li>API 테스트: <a
+              href="<%= bruno_url %>/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%9B%84%EA%B8%B0%20%EC%88%98%EC%A0%95.bru">후기 수정</a></li>
+        </ul>
+      </li>
+      <li>[구매 후기] 구매 후기 삭제 기능 추가
+        <ul>
+          <li>API 문서: <a href="/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/delete_replies___id_">구매 후기 삭제</a></li>
+          <li>API 테스트: <a
+              href="<%= bruno_url %>/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%9B%84%EA%B8%B0%20%EC%82%AD%EC%A0%9C.bru">후기 삭제</a></li>
+        </ul>
+      </li>
+    </ul>
 
     <h3 id="v3.0.0">v3.0.0 - 2025.01.08</h3>
     <ul>
@@ -44,9 +72,9 @@
           <li>user._id: 후기 작성자의 id</li>
           <li>user.name: 후기 작성자의 이름</li>
           <li>user.image: 후기 작성자의 프로필 이미지</li>
-          <li>API 문서: <a href="https://11.fesp.shop/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/get_replies_seller__seller_id_">판매자 구매 후기 목록</a></li>
+          <li>API 문서: <a href="/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/get_replies_seller__seller_id_">판매자 구매 후기 목록</a></li>
           <li>API 테스트: <a
-              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/openmarket/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%8C%90%EB%A7%A4%EC%9E%90%20%ED%9B%84%EA%B8%B0%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C.bru">판매자 후기 목록 조회</a></li>
+              href="<%= bruno_url %>/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%8C%90%EB%A7%A4%EC%9E%90%20%ED%9B%84%EA%B8%B0%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C.bru">판매자 후기 목록 조회</a></li>
         </ul>
       </li>
     </ul>
@@ -65,9 +93,9 @@
       <li>[구매 후기] 셀러의 모든 후기 조회시 후기 작성자의 이미지 추가
         <ul>
           <li>셀러의 모든 후기 조회시 후기 작성자의 이미지가 출력되도록 수정</li>
-          <li>API 문서: <a href="https://11.fesp.shop/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/get_replies_seller__seller_id_">판매자 구매 후기 목록</a></li>
+          <li>API 문서: <a href="/apidocs/#/%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/get_replies_seller__seller_id_">판매자 구매 후기 목록</a></li>
           <li>API 테스트: <a
-              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/openmarket/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%8C%90%EB%A7%A4%EC%9E%90%20%ED%9B%84%EA%B8%B0%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C.bru">판매자 후기 목록 조회</a></li>
+              href="<%= bruno_url %>/02.%EC%9D%BC%EB%B0%98%20%ED%9A%8C%EC%9B%90/03.%EA%B5%AC%EB%A7%A4%20%ED%9B%84%EA%B8%B0/%ED%8C%90%EB%A7%A4%EC%9E%90%20%ED%9B%84%EA%B8%B0%20%EB%AA%A9%EB%A1%9D%20%EC%A1%B0%ED%9A%8C.bru">판매자 후기 목록 조회</a></li>
         </ul>
       </li>
     </ul>
@@ -105,7 +133,7 @@
           <li>수정, 삭제 후에 새로운 장바구니 정보로 화면을 갱신하기 위해서 장바구니 목록 조회 API를 다시 호출할 필요가 없음</li>
           <li>API 문서: <a href="/apidocs/#/%ED%9A%8C%EC%9B%90/get_users_name">이름(name) 중복 체크</a></li>
           <li>API 테스트: <a
-              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/openmarket/01.%ED%9A%8C%EC%9B%90/01%20%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%2C%EB%A1%9C%EA%B7%B8%EC%9D%B8/%EC%9D%B4%EB%A6%84%20%EC%A4%91%EB%B3%B5%20%EC%B2%B4%ED%81%AC.bru">이름
+              href="<%= bruno_url %>/01.%ED%9A%8C%EC%9B%90/01%20%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%2C%EB%A1%9C%EA%B7%B8%EC%9D%B8/%EC%9D%B4%EB%A6%84%20%EC%A4%91%EB%B3%B5%20%EC%B2%B4%ED%81%AC.bru">이름
               중복 체크</a></li>
           
         </ul>
@@ -206,7 +234,7 @@
         <ul>
           <li>API 문서: <a href="/apidocs/#/%ED%9A%8C%EC%9B%90/get_users_name">이름(name) 중복 체크</a></li>
           <li>API 테스트: <a
-              href="https://github.com/uzoolove/febc11-vanilla-api/blob/main/server/api/bruno/openmarket/01.%ED%9A%8C%EC%9B%90/01%20%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%2C%EB%A1%9C%EA%B7%B8%EC%9D%B8/%EC%9D%B4%EB%A6%84%20%EC%A4%91%EB%B3%B5%20%EC%B2%B4%ED%81%AC.bru">이름
+              href="<%= bruno_url %>/01.%ED%9A%8C%EC%9B%90/01%20%ED%9A%8C%EC%9B%90%EA%B0%80%EC%9E%85%2C%EB%A1%9C%EA%B7%B8%EC%9D%B8/%EC%9D%B4%EB%A6%84%20%EC%A4%91%EB%B3%B5%20%EC%B2%B4%ED%81%AC.bru">이름
               중복 체크</a></li>
         </ul>
       </li>
