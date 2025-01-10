@@ -83,6 +83,10 @@ const doc = {
       description: '관리자 - 코드 관리 기능',
     },
     {
+      name: '통계 조회',
+      description: '관리자 - 통계 조회 기능',
+    },
+    {
       name: '파일',
       description: '시스템 - 파일 관리 기능',
     },
@@ -1620,7 +1624,8 @@ const doc = {
             "accessToken": "45ycguq3mpI34hxxXgB6OxZTExUoJIN5DksKPXMXAAABjt7xLkvo6jj-qNQmaA",
             "refreshToken": "UeS298UOXvpQiBwt0B6yWGlJmystIwK3Um4KPXMXAAABjt7xLkbo6jj-qNQmaA",
             "expiresIn": 21599
-          }
+          },
+          "isNew": true
         }
       },
       loginGoogleRes: {
