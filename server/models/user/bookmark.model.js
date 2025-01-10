@@ -89,11 +89,9 @@ class BookmarkModel {
       { $match: { type: 'user', target_id: user_id } },
       {
         $project: {
-          _id: 0,
-          user_id: '$user._id',
-          name: '$user.name',
-          email: '$user.email',
-          image: '$user.image'
+          type: 0,
+          user_id: 0,
+          target_id: 0,
         }
       }
     ]).toArray();

@@ -1121,16 +1121,15 @@ const doc = {
         "item": {
           "byUser": [
             {
-              "user_id": 4,
-              "name": "제이지",
-              "email": "u1@market.com",
-              "image": "/files/00-sample/user-jayg.webp"
-            },
-            {
-              "user_id": 2,
-              "name": "네오",
-              "email": "s1@market.com",
-              "image": "/files/00-next-level/user-neo.webp"
+              "_id": 6,
+              "user": {
+                "_id": 2,
+                "name": "AB",
+                "email": "w1@gmail.com",
+                "image": "/files/00-sample/user-neo.webp"
+              },
+              "memo": "항상 배송도 빨리해주고 좋습니다.",
+              "createdAt": "2024.10.28 10:22:02"
             }
           ],
           "user": [
