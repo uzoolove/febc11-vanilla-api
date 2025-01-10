@@ -309,6 +309,38 @@ class UserModel {
       // user 속성을 최상위로 이동
       { $replaceRoot: { newRoot: { $mergeObjects: ["$user", { postViews: "$postViews" }] } } },
 
+      // 주문 데이터에서 사용자별 판매수 계산
+      {
+        $lookup: {
+          from: "order",
+          let: { sellerId: "$_id" }, // 현재 사용자를 판매자로 매핑
+          pipeline: [
+            { $unwind: "$products" }, // products 배열 펼치기
+            {
+              $match: {
+                $expr: { $eq: ["$products.seller_id", "$$sellerId"] } // 현재 사용자와 판매자 ID 일치 확인
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                totalSales: { $sum: "$products.quantity" } // 판매수량 합산
+              }
+            }
+          ],
+          as: "salesData"
+        }
+      },
+
+      // 판매 수량 필드를 추가
+      {
+        $addFields: {
+          totalSales: {
+            $ifNull: [{ $arrayElemAt: ["$salesData.totalSales", 0] }, 0] // 판매량이 없으면 0
+          }
+        }
+      },
+
       { $sort: sortBy },
       { $skip: skip },
     ];
@@ -324,14 +356,11 @@ class UserModel {
         'postItems': 0,
         'bookmark.postItems': 0,
         'bookmarkedBy.userItems': 0,
+        'salesData': 0,
       }
     });
 
-
-
     const list = await this.db.user.aggregate(pipeline).toArray();
-
-
 
     // const list = await this.db.user.find(query).project({
     //   password: 0,
