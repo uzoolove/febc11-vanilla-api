@@ -1,0 +1,19 @@
+meta {
+  name: 판매 통계 조회
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{url}}/admin/statistics/orders?start=2024.10.01&by=seller
+  body: none
+  auth: inherit
+}
+
+params:query {
+  start: 2024.10.01
+  by: seller
+  ~by: product
+  ~finish: 2025.01.10
+  ~custom: {"cost.total":{"$gte":100000}}
+}

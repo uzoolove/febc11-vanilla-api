@@ -2,7 +2,7 @@ import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
   info: {
-    version: '3.1.0',
+    version: '3.2.0',
     title: '오픈마켓 API',
     description: `오픈마켓 API Server입니다.<br>
       <a href="/">버전별 변경사항 확인</a>`,
@@ -1567,6 +1567,32 @@ const doc = {
           },
         },
         required: ['target_id', 'content']
+      },
+
+      orderStaticsRes: {
+        "ok": 1,
+        "item": [
+          {
+            "_id": 3,
+            "totalQuantity": 7,
+            "totalSales": 315000,
+            "seller": {
+              "_id": 3,
+              "name": "어피치",
+              "image": "/files/00-openmarket/user-apeach.webp"
+            }
+          },
+          {
+            "_id": 2,
+            "totalQuantity": 6,
+            "totalSales": 166780,
+            "seller": {
+              "_id": 2,
+              "name": "네오",
+              "image": "/files/00-openmarket/user-neo.webp"
+            }
+          }
+        ]
       },
 
     },

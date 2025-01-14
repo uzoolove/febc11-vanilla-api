@@ -4,6 +4,7 @@ import { db as DBConfig } from '#config/index.js';
 import { getDB } from '#utils/dbUtil.js';
 
 import AdminUserModel from '#models/admin/user.model.js';
+import StatisticsModel from '#models/admin/statistics.model.js';
 
 import CodeModel from '#models/code/code.model.js';
 
@@ -23,6 +24,7 @@ export const models = {};
 for (const clientId of DBConfig.clientIds) {
   models[clientId] = {};
   models[clientId].adminUser = new AdminUserModel(getDB(clientId), models[clientId]);
+  models[clientId].statistics = new StatisticsModel(getDB(clientId), models[clientId]);
   models[clientId].code = new CodeModel(getDB(clientId), models[clientId]);
   models[clientId].sellerOrder = new SellerOrderModel(getDB(clientId), models[clientId]);
   models[clientId].sellerProduct = new SellerProductModel(getDB(clientId), models[clientId]);
