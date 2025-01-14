@@ -13,7 +13,7 @@ router.get('/orders', [
   /*
     #swagger.tags = ['통계 조회']
     #swagger.summary  = '주문량 조회'
-    #swagger.description = `기간별 주문 수량과 주문 금액을 조회합니다.`
+    #swagger.description = "기간별 주문 수량과 주문 금액을 조회합니다."
 
     #swagger.security = [{
       "Access Token": []
@@ -23,7 +23,7 @@ router.get('/orders', [
       description: `그룹 기준<br>
         seller: 판매자별 주문량 조회<br>
         product: 상품별 주문량 조회<br>
-        지정하지 않으면 전체 주문량 조회`
+        지정하지 않으면 전체 주문량 조회`,
       in: 'query',
       type: 'string',
       example: 'seller'
