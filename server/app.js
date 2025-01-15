@@ -8,8 +8,12 @@ import logger from './utils/logger.js';
 import indexRouter from './routes/index.js';
 import timer from 'node:timers/promises';
 import config from './config/index.js';
+import rateLimit from 'express-rate-limit';
+import moment from 'moment';
 
 var app = express();
+
+const blacklistedIps = new Map();
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -17,6 +21,37 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static('public'));
 app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
+
+// 요청 제한 설정 (10초에 100번 요청 가능)
+const limiter = rateLimit({
+  windowMs: 1000 * 10, // 10초
+  max: 100, // 최대 요청 횟수
+  keyGenerator: (req) => req.ip, // 요청 IP를 키로 사용
+  handler: function(req, res /*, next*/) {
+    const blockTime = 1000*60*60; // 한 시간
+    // 차단된 IP 목록에 추가
+    blacklistedIps.set(req.ip, { ip: req.ip, time: Date.now() });
+    setTimeout(() => {
+      // 차단된 IP 목록에서 제거
+      blacklistedIps.delete(req.ip);
+    }, blockTime);
+    res.status(429).json({ ok: 0, message: '요청 횟수 제한 초과(100회/10초)로 인해 IP를 차단합니다.' });
+  }
+});
+
+app.use((req, res, next) => {
+  // 블랙리스트에 등록된 IP는 요청을 차단
+  const blacklist = blacklistedIps.get(req.ip);
+  if (blacklist) {
+    const blockEndTime = moment(blacklist.time).add(1, 'hour');
+    const minutesLeft = blockEndTime.diff(moment(), 'minutes'); // 남은 시간(분) 계산
+    return res.status(403).json({ ok: 0, message: `요청 횟수 제한 초과(100회/10초)로 인해 이 IP는 1시간 동안 접속이 차단되었습니다. 차단 해제까지 남은 시간 ${minutesLeft}분 동안 어디에서 무한루프가 발생했는지 확인한 후 버그를 수정하고 재도전하세요^^`});
+  }
+  next();
+});
+
+// 모든 경로에 제한 적용
+app.use(limiter);
 
 app.use(
   cors({
