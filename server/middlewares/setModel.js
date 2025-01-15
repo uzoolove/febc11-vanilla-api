@@ -40,7 +40,7 @@ for (const clientId of DBConfig.clientIds) {
 
 function setDBModel(req, res, next) {
   const clientId = req.clientId = req.headers['client-id'] /*|| '00-sample'*/;
-  logger.info(`client-id: [${clientId}]`);
+  logger.info(`[${clientId}] ${req.ip} ${req.method} ${req.originalUrl}`);
   if (clientId) {
     if (DBConfig.clientIds.includes(clientId)) {
       req.model = models[clientId];
