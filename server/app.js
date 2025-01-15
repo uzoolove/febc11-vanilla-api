@@ -26,24 +26,26 @@ app.use('/apidocs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
 const limiter = rateLimit({
   windowMs: 1000 * 10, // 10초
   max: 100, // 최대 요청 횟수
-  keyGenerator: (req) => req.ip, // 요청 IP를 키로 사용
+  keyGenerator: (req) => req.headers['x-forwarded-for'] || req.ip, // 요청 IP를 키로 사용
   handler: function(req, res /*, next*/) {
     const blockTime = 1000*60*60; // 한 시간
+    const ip = req.headers['x-forwarded-for'] || req.ip;
     // 차단된 IP 목록에 추가
-    blacklistedIps.set(req.ip, { ip: req.ip, time: Date.now() });
+    blacklistedIps.set(ip, { ip, time: Date.now() });
     setTimeout(() => {
-      errorLogger.error('블랙리스트 해제', req.ip);
+      errorLogger.error('블랙리스트 해제', ip);
       // 차단된 IP 목록에서 제거
-      blacklistedIps.delete(req.ip);
+      blacklistedIps.delete(ip);
     }, blockTime);
-    errorLogger.error('블랙리스트 추가', req.ip);
+    errorLogger.error('블랙리스트 추가', ip);
     res.status(429).json({ ok: 0, message: '요청 횟수 제한 초과(100회/10초)로 인해 IP를 차단합니다.' });
   }
 });
 
 app.use((req, res, next) => {
   // 블랙리스트에 등록된 IP는 요청을 차단
-  const blacklist = blacklistedIps.get(req.ip);
+  const ip = req.headers['x-forwarded-for'] || req.ip;
+  const blacklist = blacklistedIps.get(ip);
   if (blacklist) {
     const blockEndTime = moment(blacklist.time).add(1, 'hour');
     const minutesLeft = blockEndTime.diff(moment(), 'minutes'); // 남은 시간(분) 계산
