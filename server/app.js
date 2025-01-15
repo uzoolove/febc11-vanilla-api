@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerFile from './swagger-output.json' assert {type: 'json'};
-import logger from './utils/logger.js';
+import logger, { errorLogger } from './utils/logger.js';
 import indexRouter from './routes/index.js';
 import timer from 'node:timers/promises';
 import config from './config/index.js';
@@ -32,9 +32,11 @@ const limiter = rateLimit({
     // 차단된 IP 목록에 추가
     blacklistedIps.set(req.ip, { ip: req.ip, time: Date.now() });
     setTimeout(() => {
+      errorLogger.error('블랙리스트 해제', req.ip);
       // 차단된 IP 목록에서 제거
       blacklistedIps.delete(req.ip);
     }, blockTime);
+    errorLogger.error('블랙리스트 추가', req.ip);
     res.status(429).json({ ok: 0, message: '요청 횟수 제한 초과(100회/10초)로 인해 IP를 차단합니다.' });
   }
 });
