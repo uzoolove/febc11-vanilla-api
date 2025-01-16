@@ -95,8 +95,7 @@ router.get('/', jwtAuth.auth('user'), [
 /*
     #swagger.tags = ['알림 메세지']
     #swagger.summary  = '내 알림 목록 조회'
-    #swagger.description = `읽지 않은 나의 알림 목록을 조회합니다.<br>
-      한번 조회된 알림은 읽은 상태가 되면서 다시 조회되지 않습니다.`
+    #swagger.description = `읽지 않은 나의 알림 목록을 조회합니다.<br>`
     
     #swagger.security = [{
       "Access Token": []
@@ -147,6 +146,7 @@ router.get('/', jwtAuth.auth('user'), [
   */
   try{
     const notificationModel = req.model.notification;
+    // 목록을 조회한 후 바로 읽음 상태로 처리했는데 StrictMode에서 두번 요청하면서 두번째 응답에 데이터가 없는 문제가 발생해서 setRead 추가
     const item = await notificationModel.find({ userId: req.user._id, setRead: false });
     
     res.json({ ok: 1, item });
