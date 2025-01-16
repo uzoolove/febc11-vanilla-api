@@ -1,4 +1,5 @@
 import logger from '#utils/logger.js';
+import moment from 'moment';
 
 class StatisticsModel{
   constructor(db, model){
@@ -113,6 +114,58 @@ class StatisticsModel{
 
     const result = { item: list };
 
+    logger.debug(list);
+    return result;
+  }
+
+  // 일별 판매량 조회
+  async ordersByDay(search) {
+    logger.trace(arguments);
+    const query = search;
+
+    const list = await this.db.order.aggregate([
+      { $match: query }, // 필터 조건 적용
+      { $unwind: "$products" }, // products 배열을 분리
+      {
+        $group: {
+          _id: { $substr: ["$createdAt", 0, 10] }, // createdAt의 앞 10자를 기준으로 일별 그룹화
+          totalQuantity: { $sum: "$products.quantity" }, // 판매 수량 합산
+          totalSales: { $sum: "$products.price" }, // 판매 금액 합산
+        },
+      },
+      { $sort: { _id: 1 } }, // 날짜 오름차순 정렬
+      {
+        $project: {
+          date: "$_id",
+          totalQuantity: 1,
+          totalSales: 1,
+          _id: 0,
+        }
+      }
+    ]).toArray();
+
+    // 판매가 없는 날짜에 채울 날짜 범위 생성
+    const dates = [];
+    let currentDate = moment(search['createdAt']['$gte'], 'YYYY.MM.DD');
+    const endDate = moment(search['createdAt']['$lte'], 'YYYY.MM.DD');
+
+    while (currentDate.isSameOrBefore(endDate)) {
+      dates.push({
+        date: currentDate.format('YYYY.MM.DD'),
+        totalQuantity: 0,
+        totalSales: 0
+      });
+      currentDate.add(1, 'days');
+    }
+
+    // 날짜 범위와 실제 데이터를 병합
+    const allList = dates.map(date => {
+      const found = list.find(item => item.date === date.date);
+      return found || date;
+    });
+  
+    const result = { item: allList };
+  
     logger.debug(list);
     return result;
   }

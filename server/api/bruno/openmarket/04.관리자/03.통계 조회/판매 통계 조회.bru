@@ -5,15 +5,12 @@ meta {
 }
 
 get {
-  url: {{url}}/admin/statistics/orders?start=2024.10.01&by=seller
+  url: {{url}}/admin/statistics/orders?finish=2025.01.10&start=2024.12.01
   body: none
   auth: inherit
 }
 
 params:query {
-  start: 2024.10.01
-  by: seller
-  ~by: product
-  ~finish: 2025.01.10
-  ~custom: {"cost.total":{"$gte":100000}}
+  finish: 2025.01.10
+  start: 2024.12.01
 }

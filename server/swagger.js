@@ -1569,31 +1569,8 @@ const doc = {
         required: ['target_id', 'content']
       },
 
-      orderStaticsRes: {
-        "ok": 1,
-        "item": [
-          {
-            "_id": 3,
-            "totalQuantity": 7,
-            "totalSales": 315000,
-            "seller": {
-              "_id": 3,
-              "name": "어피치",
-              "image": "/files/00-openmarket/user-apeach.webp"
-            }
-          },
-          {
-            "_id": 2,
-            "totalQuantity": 6,
-            "totalSales": 166780,
-            "seller": {
-              "_id": 2,
-              "name": "네오",
-              "image": "/files/00-openmarket/user-neo.webp"
-            }
-          }
-        ]
-      },
+
+
 
     },
 
@@ -2778,7 +2755,63 @@ const doc = {
         }
       },
 
+      orderStaticsRes: {
+        "ok": 1,
+        "item": [
+          {
+            "totalQuantity": 10,
+            "totalSales": 374520
+          }
+        ]
+      },
 
+      orderStaticsResBySeller:{
+        "ok": 1,
+        "item": [
+          {
+            "_id": 3,
+            "totalQuantity": 5,
+            "totalSales": 225000,
+            "seller": {
+              "_id": 3,
+              "name": "어피치",
+              "image": "/files/00-openmarket/user-apeach.webp"
+            }
+          }
+        ]
+      },
+
+      orderStaticsResByProduct: {
+        "ok": 1,
+        "item": [
+          {
+            "_id": 4,
+            "totalQuantity": 5,
+            "totalSales": 225000,
+            "product": {
+              "_id": 4,
+              "name": "레고 테크닉 42151 부가티 볼리드",
+              "price": 45000,
+              "image": {
+                "path": "/files/00-openmarket/sample-bugatti.png",
+                "name": "sample-bugatti.png",
+                "originalname": "부가티.png"
+              }
+            }
+          },
+        ]
+      },
+
+      orderStaticsResByDay: {
+        "ok": 1,
+        "item": [
+          {
+            "totalQuantity": 2,
+            "totalSales": 34520,
+            "date": "2024.10.22"
+          },
+        ]
+      },
 
 
 
