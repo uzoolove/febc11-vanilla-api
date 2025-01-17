@@ -27,6 +27,7 @@ const limiter = rateLimit({
   windowMs: 1000 * 10, // 10초
   max: 100, // 최대 요청 횟수
   keyGenerator: (req) => req.headers['x-forwarded-for'] || req.ip, // 요청 IP를 키로 사용
+  skip: (req) => req.path.startsWith('/files/'), // /files/ 경로는 제한을 두지 않음
   handler: function(req, res /*, next*/) {
     const blockTime = 1000*60*60; // 한 시간
     const ip = req.headers['x-forwarded-for'] || req.ip;
