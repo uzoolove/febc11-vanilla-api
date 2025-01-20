@@ -7,9 +7,9 @@ meta {
 get {
   url: {{url}}/products?sort={"price": -1}
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   sort: {"price": -1}
 }

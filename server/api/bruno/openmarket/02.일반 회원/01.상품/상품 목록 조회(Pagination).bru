@@ -7,10 +7,10 @@ meta {
 get {
   url: {{url}}/products?page=3&limit=3
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   page: 3
   limit: 3
 }

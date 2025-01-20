@@ -7,9 +7,9 @@ meta {
 get {
   url: {{url}}/products?custom={"createdAt": {"$gte": "2024.03.10", "$lt": "2024.03.20"}}
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   custom: {"createdAt": {"$gte": "2024.03.10", "$lt": "2024.03.20"}}
 }

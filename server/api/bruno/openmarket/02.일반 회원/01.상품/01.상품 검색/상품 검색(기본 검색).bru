@@ -7,10 +7,10 @@ meta {
 get {
   url: {{url}}/products?minPrice=10000&maxPrice=60000&minShippingFees=0&maxShippingFees=3500&keyword=레고&seller_id=3
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   minPrice: 10000
   maxPrice: 60000
   minShippingFees: 0

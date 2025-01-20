@@ -7,9 +7,9 @@ meta {
 get {
   url: {{url}}/products?custom={"extra.isNew":{"$in":[true, false]},"_id":{"$in":[1,2,3]}}
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   custom: {"extra.isNew":{"$in":[true, false]},"_id":{"$in":[1,2,3]}}
 }

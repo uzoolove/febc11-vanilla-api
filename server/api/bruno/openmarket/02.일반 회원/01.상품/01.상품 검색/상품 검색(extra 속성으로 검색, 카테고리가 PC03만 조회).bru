@@ -7,9 +7,9 @@ meta {
 get {
   url: {{url}}/products?custom={"extra.category.0": "PC03"}
   body: none
-  auth: none
+  auth: inherit
 }
 
-query {
+params:query {
   custom: {"extra.category.0": "PC03"}
 }
