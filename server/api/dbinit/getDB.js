@@ -1,7 +1,11 @@
 import { MongoClient } from 'mongodb';
 
-async function getDB(clientId) {
-  const url = `${process.env.DB_URL}/${clientId}?authSource=admin`;
+async function getDB() {
+  const clientId = process.env.CLIENT_ID;
+  
+  // const url = `${process.env.DB_URL}/${clientId}?authSource=${clientId}`;
+
+  const url = `mongodb://${clientId}:${clientId}!!@${process.env.DB_URL}?authSource=${clientId}`;
   // const url = `${process.env.DB_URL}/${clientId}`;
 
   console.log(`DB 접속 시도`, url);
@@ -18,9 +22,10 @@ async function getDB(clientId) {
     db.review = db.collection('review');
     db.seq = db.collection('seq');
     db.code = db.collection('code');
-    db.bookmark = db.collection('bookmark');
     db.config = db.collection('config');
+    db.bookmark = db.collection('bookmark');
     db.post = db.collection('post');
+    db.notification = db.collection('notification');
 
     const nextSeq = async _id => {
       let result = await db.seq.findOneAndUpdate({ _id }, { $inc: { no: 1 } });
