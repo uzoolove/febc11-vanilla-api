@@ -12,7 +12,7 @@ const router = express.Router();
 router.get('/', [
     query('custom').optional().isJSON().withMessage('custom 값은 JSON 형식의 문자열이어야 합니다.'),
     query('sort').optional().isJSON().withMessage('sort 값은 JSON 형식의 문자열이어야 합니다.')
-  ], validator.checkResult, async function(req, res, next) {
+  ], validator.checkResult, jwtAuth.auth('user', true), async function(req, res, next) {
 
   /*
     #swagger.tags = ['상품']
@@ -175,7 +175,7 @@ router.get('/', [
     const limit = Number(req.query.limit || 0);
 
     // 자신의 북마크 여부 확인을 위해서 회원 정보 조회
-    (await jwtAuth.auth('user'))(req, res, ()=>{});
+    // (await jwtAuth.auth('user'))(req, res, ()=>{});
   
     const result = await productModel.findBy({ search, sortBy, page, limit, showSoldOut, userId: req.user?._id });
     
@@ -186,7 +186,7 @@ router.get('/', [
 });
 
 // 상품 상세 조회
-router.get('/:_id', async function(req, res, next) {
+router.get('/:_id', jwtAuth.auth('user', true), async function(req, res, next) {
 
   /*
     #swagger.tags = ['상품']
@@ -230,7 +230,7 @@ router.get('/:_id', async function(req, res, next) {
     const productModel = req.model.product;
 
     // 자신의 북마크 여부 확인을 위해서 회원 정보 조회
-    (await jwtAuth.auth('user'))(req, res, ()=>{});
+    // (await jwtAuth.auth('user'))(req, res, ()=>{});
 
     const item = await productModel.findById({ _id: Number(req.params._id), userId: req.user?._id });
     if(item){
