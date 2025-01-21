@@ -1,22 +1,24 @@
 import _ from 'lodash';
 
 import logger from '#utils/logger.js';
-import codeUtil from '#utils/codeUtil.js';
 
 const priceUtil = {
-  async getCost(clientId, db, userModel, { user_id, products, clientDiscount = { products: 0, shippingFees: 0 } }){
+  async getCost(db, userModel, codeModel, configModel, { user_id, products, clientDiscount = { products: 0, shippingFees: 0 } }){
 
     const sellerBaseShippingFees = {};
     const productArray = _.map(products, '_id');
     const dbProducts = await db.product.find({ _id: { $in: productArray } }).toArray();
+    const shippingFees = (await configModel.findById('shippingFees'))?.value;
 
     dbProducts.forEach((product) => {
       const beforeShippingFees = sellerBaseShippingFees[product.seller_id];
       product.price = product.price * _.find(products, {_id: product._id}).quantity;
       if(beforeShippingFees === undefined){
-        sellerBaseShippingFees[product.seller_id] = product.shippingFees === undefined ? global[clientId].config.shippingFees?.value : product.shippingFees;
+        // sellerBaseShippingFees[product.seller_id] = product.shippingFees === undefined ? global[clientId].config.shippingFees?.value : product.shippingFees;
+        sellerBaseShippingFees[product.seller_id] = product.shippingFees === undefined ? shippingFees : product.shippingFees;
       }else{
-        sellerBaseShippingFees[product.seller_id] = Math.max(beforeShippingFees, product.shippingFees === undefined ? global[clientId].config.shippingFees?.value : product.shippingFees);
+        // sellerBaseShippingFees[product.seller_id] = Math.max(beforeShippingFees, product.shippingFees === undefined ? global[clientId].config.shippingFees?.value : product.shippingFees);
+        sellerBaseShippingFees[product.seller_id] = Math.max(beforeShippingFees, product.shippingFees === undefined ? shippingFees : product.shippingFees);
       }
     });
 
@@ -32,10 +34,11 @@ const priceUtil = {
       // 회원 등급
       const membershipClass = await userModel.findAttrById(user_id, 'extra.membershipClass');
       // 회원 등급별 할인율
-      const discountRate = codeUtil.getCodeAttr(clientId, membershipClass?.extra?.membershipClass, 'discountRate');
+      // const discountRate = codeUtil.getCodeAttr(clientId, membershipClass?.extra?.membershipClass, 'discountRate');
+      const discountCode = await codeModel.findByCode(membershipClass?.extra?.membershipClass);
 
-      if(discountRate !== undefined){
-        totalDiscount.products = clientDiscount.products + Math.ceil((cost.products - clientDiscount.products) * (discountRate/100) /10) * 10;
+      if(discountCode !== undefined){
+        totalDiscount.products = clientDiscount.products + Math.ceil((cost.products - clientDiscount.products) * (discountCode.discountRate/100) /10) * 10;
       }
     }
 
@@ -46,7 +49,8 @@ const priceUtil = {
     };
 
     // 무료 배송 확인
-    if(global[clientId].config.freeShippingFees?.value && (result.total >= global[clientId].config.freeShippingFees.value)){
+    const freeShippingFees = (await configModel.findById('freeShippingFees'))?.value;
+    if(result.total >= freeShippingFees){
       result.discount.shippingFees = cost.shippingFees;
     }
 

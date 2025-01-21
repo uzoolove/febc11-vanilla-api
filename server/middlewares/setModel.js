@@ -6,7 +6,8 @@ import { getDB } from '#utils/dbUtil.js';
 import AdminUserModel from '#models/admin/user.model.js';
 import StatisticsModel from '#models/admin/statistics.model.js';
 
-import CodeModel from '#models/code/code.model.js';
+import CodeModel from '#models/system/code.model.js';
+import ConfigModel from '#models/system/config.model.js';
 
 import SellerOrderModel from '#models/seller/order.model.js';
 import SellerProductModel from '#models/seller/product.model.js';
@@ -26,6 +27,7 @@ for (const clientId of DBConfig.clientIds) {
   models[clientId].adminUser = new AdminUserModel(getDB(clientId), models[clientId]);
   models[clientId].statistics = new StatisticsModel(getDB(clientId), models[clientId]);
   models[clientId].code = new CodeModel(getDB(clientId), models[clientId]);
+  models[clientId].config = new ConfigModel(getDB(clientId), models[clientId]);
   models[clientId].sellerOrder = new SellerOrderModel(getDB(clientId), models[clientId]);
   models[clientId].sellerProduct = new SellerProductModel(getDB(clientId), models[clientId]);
   models[clientId].bookmark = new BookmarkModel(getDB(clientId), models[clientId]);

@@ -47,7 +47,9 @@ class OrderModel {
 
     orderInfo.products = products;
     const userModel = this.model.user;
-    const cost = await priceUtil.getCost(this.clientId, this.db, userModel, { products: orderInfo.products, clientDiscount: orderInfo.discount, user_id: orderInfo.user_id });
+    const codeModel = this.model.code;
+    const configModel = this.model.config;
+    const cost = await priceUtil.getCost(this.db, userModel, codeModel, configModel, { products: orderInfo.products, clientDiscount: orderInfo.discount, user_id: orderInfo.user_id });
     delete orderInfo.discount;
     orderInfo = { ...orderInfo, cost };
 
@@ -63,7 +65,7 @@ class OrderModel {
         .map('_id')
         .value();
       if (!orderInfo.dryRun) {
-        await this.model.cart.deleteMany(deleteIdList);
+        await this.model.cart.deleteMany(orderInfo.user_id, deleteIdList);
       }
     }
     return orderInfo;

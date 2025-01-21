@@ -1,26 +1,32 @@
 import express from 'express';
+import validator from '#middlewares/validator.js';
+import { body } from 'express-validator';
 
 const router = express.Router();
 
-// 코드 등록
-router.post('/', async function(req, res, next) {
+// 설정 등록
+router.post('/', [
+  body('_id').notEmpty().withMessage('설정 id는 필수입니다.'),
+  body('title').notEmpty().withMessage('설정명은 필수입니다.'),
+  body('value').notEmpty().withMessage('설정값은 필수입니다.'),
+], validator.checkResult, async function(req, res, next) {
   /*
-    #swagger.tags = ['코드 관리']
-    #swagger.summary  = '코드 등록'
-    #swagger.description = '코드를 등록합니다.<br>코드 등록을 완료한 후 코드 정보를 반환합니다.'
+    #swagger.tags = ['설정 관리']
+    #swagger.summary  = '설정값 등록'
+    #swagger.description = '설정값을 등록합니다.<br>설정값 등록을 완료한 후 설정값 정보를 반환합니다.'
 
     #swagger.security = [{
       "Access Token": []
     }]
 
     #swagger.requestBody = {
-      description: "코드 정보",
+      description: "등록할 설정값 정보",
       required: true,
       content: {
         "application/json": {
-          schema: { $ref: '#components/schemas/createCode' },
+          schema: { $ref: '#components/schemas/createConfig' },
           examples: {
-            "판매 회원 승인 코드": { $ref: "#/components/examples/createSellerConfirmBody" },
+            "페이지당 출력할 항목수 등록": { $ref: "#/components/examples/createConfigBody" },
           }
         }
       }
@@ -30,7 +36,7 @@ router.post('/', async function(req, res, next) {
       content: {
         "application/json": {
           examples: {
-            "판매 회원 승인 코드": { $ref: "#/components/examples/createCodeRes" }
+            "페이지당 출력할 항목수 등록 응답": { $ref: "#/components/examples/createConfigRes" }
           }
         }
       }
@@ -70,39 +76,39 @@ router.post('/', async function(req, res, next) {
   */
 
   try{
-    const codeModel = req.model.code;
-    const item = await codeModel.create(req.body);    
+    const configModel = req.model.config;
+    const item = await configModel.create(req.body);    
     res.status(201).json({ok: 1, item});
   }catch(err){
     next(err);
   }
 });
 
-// 코드 수정
+// 설정 수정
 router.put('/:_id', async function(req, res, next) {
   /*
-    #swagger.tags = ['코드 관리']
-    #swagger.summary  = '코드 수정'
-    #swagger.description = '코드를 수정합니다.'
+    #swagger.tags = ['설정 관리']
+    #swagger.summary  = '설정 수정'
+    #swagger.description = '설정을 수정합니다.'
 
     #swagger.security = [{
       "Access Token": []
     }]
 
     #swagger.parameters['_id'] = {
-      description: "코드 id",
+      description: "설정 id",
       in: 'path',
       type: 'string',
-      example: 'membershipClass'
+      example: 'itemPerPage'
     }
 
     #swagger.requestBody = {
-      description: "수정할 코드 정보",
+      description: "수정할 설정값 정보",
       required: true,
       content: {
         "application/json": {
           examples: {
-            "회원 등급에 VVIP 추가": { $ref: "#/components/examples/updateMembershipClassCode" }
+            "페이지당 출력할 항목수 수정": { $ref: "#/components/examples/updateConfigBody" }
           }
         }
       }
@@ -112,7 +118,7 @@ router.put('/:_id', async function(req, res, next) {
       content: {
         "application/json": {
           examples: {
-            "회원 등급에 VVIP 추가": { $ref: "#/components/examples/updateMembershipClassCodeRes" }
+            "페이지당 출력할 항목수 수정 응답": { $ref: "#/components/examples/updateConfigBodyRes" }
           }
         }
       }
@@ -126,7 +132,7 @@ router.put('/:_id', async function(req, res, next) {
       }
     },
     #swagger.responses[404] = {
-      description: '코드가 존재하지 않음',
+      description: '설정값이 존재하지 않음',
       content: {
         "application/json": {
           schema: { $ref: "#/components/schemas/error404" }
@@ -143,8 +149,8 @@ router.put('/:_id', async function(req, res, next) {
     }
   */
   try{
-    const codeModel = req.model.code;
-    const result = await codeModel.update(req.params._id, req.body);
+    const configModel = req.model.config;
+    const result = await configModel.update(req.params._id, req.body);
     if(result){
       res.json({ok: 1, updated: result});  
     }else{
@@ -155,22 +161,22 @@ router.put('/:_id', async function(req, res, next) {
   }
 });
 
-// 코드 삭제
+// 설정 삭제
 router.delete('/:_id', async function(req, res, next) {
   /*
-    #swagger.tags = ['코드 관리']
-    #swagger.summary  = '코드 삭제'
-    #swagger.description = '코드를 삭제합니다.'
+    #swagger.tags = ['설정 관리']
+    #swagger.summary  = '설정값 삭제'
+    #swagger.description = '설정값을 삭제합니다.'
 
     #swagger.security = [{
       "Access Token": []
     }]
 
     #swagger.parameters['_id'] = {
-      description: "코드 id",
+      description: "설정값 id",
       in: 'path',
       type: 'string',
-      example: 'membershipClass'
+      example: 'itemPerPage'
     }
 
     #swagger.responses[200] = {
@@ -190,7 +196,7 @@ router.delete('/:_id', async function(req, res, next) {
       }
     }
     #swagger.responses[404] = {
-      description: '삭제할 코드가 존재하지 않음',
+      description: '설정값이 존재하지 않음',
       content: {
         "application/json": {
           schema: { $ref: "#/components/schemas/error404" }
@@ -207,8 +213,8 @@ router.delete('/:_id', async function(req, res, next) {
     }
   */
   try{
-    const codeModel = req.model.code;
-    const result = await codeModel.delete(req.params._id);
+    const configModel = req.model.config;
+    const result = await configModel.delete(req.params._id);
     if(result.deletedCount){
       res.json({ok: 1});
     }else{

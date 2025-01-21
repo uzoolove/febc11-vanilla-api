@@ -34,12 +34,19 @@ router.get('/', async function(req, res, next) {
   */
 
   try{
-    const clientId = req.clientId;
+    const codeModel = req.model.code;
+    const list = await codeModel.find();
+
     const item = {
-      nested: codeUtil.getCodeObj(clientId),
-      flatten: codeUtil.getCodeFlatten(clientId)
+      flatten: _.flatten(_.map(list, 'codes')).reduce((codes, item) => {
+        return {
+          ...codes,
+          [item['code']]: item
+        };
+      }, {}),
+      nested: codeUtil.generateCodeObj(list),
     };
-    console.log(req.clientId, item)
+
     res.json({ ok: 1, item });
   }catch(err){
     next(err);

@@ -1,7 +1,6 @@
 import logger from '#utils/logger.js';
 import { db as DBConfig } from '#config/index.js';
 import { MongoClient } from 'mongodb';
-import codeUtil from '#utils/codeUtil.js';
 
 const connections = {};
 
@@ -47,8 +46,8 @@ for (const clientId of DBConfig.clientIds) {
       client
     };
 
-    await codeUtil.initCode(clientId, db);
-    await codeUtil.initConfig(clientId, db);
+    // await codeUtil.initCode(clientId, db);
+    // await codeUtil.initConfig(clientId, db);
   } catch (err) {
     logger.error(err);
   }

@@ -79,8 +79,12 @@ const doc = {
       description: '관리자 - 회원 관리 기능',
     },
     {
+      name: '설정 관리',
+      description: '관리자 - 설정값 관리 기능(독립된 key/value 쌍의 데이터 관리)',
+    },
+    {
       name: '코드 관리',
-      description: '관리자 - 코드 관리 기능',
+      description: '관리자 - 코드 관리 기능(그룹화된 key/value 쌍의 데이터 관리)',
     },
     {
       name: '통계 조회',
@@ -96,7 +100,11 @@ const doc = {
     },
     {
       name: '코드 조회',
-      description: '시스템 - 코드 조회 관리 기능',
+      description: '시스템 - 코드 조회 기능(그룹화된 key/value 쌍의 데이터 조회)',
+    },
+    {
+      name: '설정 조회',
+      description: '시스템 - 설정값 조회 기능(독립된 key/value 쌍의 데이터 조회)',
     },
   ],
   components: {
@@ -245,21 +253,54 @@ const doc = {
           }
         },
         required: ['_id', 'title', 'codes']
-      }
-    },
-    schemas: {
-      Sample: {
+      },
+      createConfig: {
         type: 'object',
         properties: {
-          "a": {
+          _id: {
             type: 'string',
-            required: true,
-            default: 'hello',
-            description: 'With no swagger-autogen render...'
+            description: '설정 아이디'
+          },
+          title: {
+            type: 'string',
+            description: '설정명'
+          },
+          value: {
+            type: 'any',
+            description: '설정값'
           }
-        }
-
+        },
+        required: ['_id', 'title', 'value']
       },
+      createNotification: {
+        type: 'object',
+        properties: {
+          target_id: {
+            type: 'number',
+            description: '메세지를 전달받을 회원 ID'
+          },
+          type: {
+            type: 'string',
+            description: '알림 종류를 구분하는 값'
+          },
+          channel: {
+            type: 'string',
+            description: '알림을 전달하는 방법'
+          },
+          content: {
+            type: 'string',
+            description: '알림 메세지'
+          },
+          extra: {
+            type: 'any',
+            description: '추가 속성들 정의'
+          },
+        },
+        required: ['target_id', 'content']
+      },
+    },
+    schemas: {
+      
       error401: {
         "ok": 0,
         "message": "{인증 실패 사유}",
@@ -275,7 +316,7 @@ const doc = {
       },
       error404: {
         "ok": 0,
-        "message": "/api/xxx 리소스를 찾을 수 없습니다."
+        "message": "/xxx 리소스를 찾을 수 없습니다."
       },
       errorUser404: {
         "ok": 0,
@@ -1542,39 +1583,67 @@ const doc = {
         }
       },
 
-      createNotification: {
-        type: 'object',
-        properties: {
-          target_id: {
-            type: 'number',
-            description: '메세지를 전달받을 회원 ID'
+      
+
+      configListRes: {
+        "ok": 1,
+        "item": [
+          {
+            "_id": "shippingFees",
+            "title": "배송비",
+            "value": 3500
           },
-          type: {
-            type: 'string',
-            description: '알림 종류를 구분하는 값'
-          },
-          channel: {
-            type: 'string',
-            description: '알림을 전달하는 방법'
-          },
-          content: {
-            type: 'string',
-            description: '알림 메세지'
-          },
-          extra: {
-            type: 'object',
-            description: '추가 속성들 정의'
-          },
-        },
-        required: ['target_id', 'content']
+          {
+            "_id": "freeShippingFees",
+            "title": "배송비 무료 금액",
+            "value": 50000
+          }
+        ]
       },
 
+      configInfoRes: {
+        "ok": 1,
+        "item": {
+          "_id": "shippingFees",
+          "title": "배송비",
+          "value": 3500
+        }
+      },
 
-
-
+      
     },
 
     examples: {
+      updateConfigBody: {
+        "value\u200B": 20 // value는 swagger-autogen에서 내부적으로 정의된 듯해서 제로폭 공백문자 추가
+      },
+
+      updateConfigBodyRes: {
+        "ok": 1,
+        "updated": {
+          "_id": "itemPerPage",
+          "title": "한 페이지당 보여줄 항목수",
+          "value": 20
+        }
+      },
+
+      createConfigBody: {
+        _id: "itemPerPage",
+        title: "한 페이지당 보여줄 항목수",
+        "value\u200B": 10, // value는 swagger-autogen에서 내부적으로 정의된 듯해서 제로폭 공백문자 추가
+      },
+
+      createConfigRes: {
+        "ok": 1,
+        "item": {
+          "_id": "itemPerPage",
+          "title": "한 페이지당 보여줄 항목수",
+          "value": 10
+        }
+      },
+
+      
+
       loginRes: {
         "ok": 1,
         "item": {

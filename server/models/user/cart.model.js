@@ -49,7 +49,7 @@ class CartModel {
     return list;
   }
 
-  // 장바구니 목록 조회(비로그인 상태))
+  // 장바구니 목록 조회(비로그인 상태)
   async findLocalCart({ products, discount }) {
     logger.trace(arguments);
     const carts = {
@@ -75,7 +75,9 @@ class CartModel {
     }
 
     const userModel = this.model.user;
-    carts.cost = await priceUtil.getCost(this.clientId, this.db, userModel, { products, clientDiscount: discount });
+    const codeModel = this.model.code;
+    const configModel = this.model.config;
+    carts.cost = await priceUtil.getCost(this.db, userModel, codeModel, configModel, { products, clientDiscount: discount });
 
     logger.debug(carts);
     return carts;
@@ -122,7 +124,9 @@ class CartModel {
     ]).sort({ _id: -1 }).toArray();
 
     const userModel = this.model.user;
-    list.cost = await priceUtil.getCost(this.clientId, this.db, userModel, { products: _.map(list, cart => ({ _id: cart.product._id, quantity: cart.quantity })), clientDiscount: discount, user_id });
+    const codeModel = this.model.code;
+    const configModel = this.model.config;
+    list.cost = await priceUtil.getCost(this.db, userModel, codeModel, configModel, { products: _.map(list, cart => ({ _id: cart.product._id, quantity: cart.quantity })), clientDiscount: discount, user_id });
 
     logger.debug(list);
     return list;
@@ -163,7 +167,7 @@ class CartModel {
   async deleteMany(user_id, cartIdList) {
     logger.trace(arguments);
 
-    await this.db.cart.deleteMany({ _id: { $in: cartIdList } });
+    await this.db.cart.deleteMany({ _id: { $in: cartIdList }, user_id });
     // return result;
 
     const list = await this.findByUser(user_id);
