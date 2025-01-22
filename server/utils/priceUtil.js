@@ -37,7 +37,7 @@ const priceUtil = {
       // const discountRate = codeUtil.getCodeAttr(clientId, membershipClass?.extra?.membershipClass, 'discountRate');
       const discountCode = await codeModel.findByCode(membershipClass?.extra?.membershipClass);
 
-      if(discountCode !== undefined){
+      if(discountCode != undefined){
         totalDiscount.products = clientDiscount.products + Math.ceil((cost.products - clientDiscount.products) * (discountCode.discountRate/100) /10) * 10;
       }
     }
