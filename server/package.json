@@ -12,6 +12,9 @@
     ],
     "exec": "npm run prestart && node"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "prestart": "node ./swagger.js",
     "start": "cross-env NODE_ENV=production node -r dotenv/config ./bin/www-prod.js",
